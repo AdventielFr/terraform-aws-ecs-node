@@ -197,7 +197,7 @@ resource "aws_ecs_cluster" "ecs_cluster" {
 
 
 module "ecs_cluster_node" {
-  source  = "git::https://github.com/AdventielFr/terraform-aws-ecs_node.git?ref=0.1.0"
+  source  = "git::https://github.com/AdventielFr/terraform-aws-ecs-node.git?ref=0.1.0"
 
   # deployment informations
   aws_region       = "eu-west-3"
