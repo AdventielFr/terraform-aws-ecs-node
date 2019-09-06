@@ -284,7 +284,7 @@ resource "aws_autoscaling_policy" "policy_scale_down" {
   autoscaling_group_name = aws_autoscaling_group.this.name
   adjustment_type        = "ChangeInCapacity"
   scaling_adjustment     = var.alarm_scale_down_scaling_adjustment
-  cooldown               = alarm_policy_scale_down_cool_down
+  cooldown               = var.alarm_policy_scale_down_cool_down
   policy_type            = "SimpleScaling"
 }
 
