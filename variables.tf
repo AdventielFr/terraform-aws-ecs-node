@@ -12,13 +12,13 @@ variable "bucket_force_destroy" {
 variable "create_shared_bucket" {
   type        = bool
   default     = false
-  description = "Create shared bucket"
+  description = "Create shared S3 bucket"
 }
 
 variable "use_shared_bucket" {
   type        = bool
   default     = true
-  description = "Use shared bucket"
+  description = "Use shared S3 bucket"
 }
 
 variable "key_name" {
@@ -89,7 +89,7 @@ variable "ecs_cluster_name" {
 }
 
 variable "ecs_group_node" {
-  description = "The groupe node"
+  description = "The instance group node (show tag ECSGroup ). Use for placement strategy."
   type        = string
   default     = "default"
 }
@@ -106,7 +106,7 @@ variable "instance_security_groups" {
 }
 
 variable "ecs_cloudwath_retention_in_days" {
-  description = "The Cloudwath retention days."
+  description = "The Cloudwath retention days for all Cloudwath LogGroup created."
   default     = 7
   type        = number
 }
@@ -194,7 +194,6 @@ variable "alarm_scale_down_scaling_adjustment"{
   default     = -1
   type        = number
 }
-
 
 variable "alarm_policy_scale_up_cool_down" {
   description = "For scale up, the amount of time, in seconds, after a scaling activity completes and before the next scaling activity can start."

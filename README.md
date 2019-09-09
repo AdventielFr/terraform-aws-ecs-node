@@ -1,38 +1,39 @@
-
+<p align="center">
   <table>
     <tr>
       <td style="text-align: center; vertical-align: middle;"><img src="_docs/logo_aws.jpg"/></td>
       <td style="text-align: center; vertical-align: middle;"><img src="_docs/logo_adv.jpg"/></td>
     </tr> 
   <table>
-
-
+</p>
 
 # AWS ECS Cluster Node Terraform module
 
 The purpose of this module is to create an EC2 instances set that will make up the nodes of an ECS cluster.
 
-## I - Infrastructure components 
+## Infrastructure components
 
-### I.1 - AWS Auto scaling group
+### AWS Auto scaling group
   
 This terraform script created **One AWS Auto scaling group** used to ensure high availability of the instance group in the cluster
 
-  Name : **{{environment}}**-ecs-node-**{{ecs_group_node}}**-asg
+Name : **{{environment}}**-ecs-node-**{{ecs_group_node}}**-asg
 
-  Tags : 
+Tags :
 
-  * ECSGroup : **{{ecs_group_node}}**
-  * Environment : **{{environment}}**
-  * Name : **{{environment}}**-ecs-node-**{{ecs_group_node}}**
+* ECSGroup : **{{ecs_group_node}}**
+
+* Environment : **{{environment}}**
+
+* Name : **{{environment}}**-ecs-node-**{{ecs_group_node}}**
   
-### I.2 - AWS EC2 Launch configuration
+### AWS EC2 Launch configuration
 
 This terraform script created **One AWS Launch configuration** used to deploy an instance of the instance group in the cluster.
 
   Name : **{{environment}}**-ecs-node-**{{ecs_group_node}}**-lc
 
-### I.3 - AWS EC2 instances
+### AWS EC2 instances
 
 This terraform script created **Many AWS EC2 intances** for the instance group in the cluster.
 
@@ -44,92 +45,91 @@ This terraform script created **Many AWS EC2 intances** for the instance group i
   * Environment : **{{environment}}**
   * Name : **{{environment}}**-ecs-node-**{{ecs_group_node}}**
 
-### I.4 - AWS Cloudwatch log groups
+### AWS Cloudwatch log groups
 
 This terraform script created **Many AWS CloudWatch LogGroup** can be used to monitor the instance group in the cluster
 
-#### I.4.1 - dmesg
+#### dmesg
   
 Name : /aws/ecs/**{{ecs_cluster_name}}**/node/**{{ecs_group_node}}**/var/log/dmesg
 
 Recover the contents of the **/var/log/dmesg** file of instances of the cluster instance group
 
-#### I.4.2 - audit.log
+#### audit.log
 
 Name : /aws/ecs/**{{ecs_cluster_name}}**/node/**{{ecs_group_node}}**/var/log/audit.log
 
 Recover the contents of the **/var/log/audit.log** file of instances of the cluster instance group
 
-#### I.4.3 - ecs-init
+#### ecs-init
 
 Name : /aws/ecs/**{{ecs_cluster_name}}**node/**{{ecs_group_node}}**/var/log/ecs-init.log
 
 Recover the contents of the **/var/log/ecs-init.log** file of instances of the cluster instance group
 
-#### I.4.4 - ecs-init
+#### ecs-restart
 
 Name : /aws/ecs/**{{ecs_cluster_name}}**/node/**{{ecs_group_node}}**/var/log/ecs-restart.log
 
 Recover the contents of the **/var/log/ecs-restart.log** file of instances of the cluster instance group
 
-#### I.4.5 - messages
+#### messages
 
 Name : aws/ecs/**{{ecs_cluster_name}}**/node/**{{ecs_group_node}}**/var/log/message.log
 
 Recover the contents of the **/var/log/messages** file of instances of the cluster instance group
 
-
-### I.5 - AWS CloudWatch Alarm 
+### AWS CloudWatch Alarm 
 
 This terraform script created **Many AWS CloudWatch Alarm** for the instance group in the cluster.
 
-#### I.5.1 - CPU alarm scale down
+#### CPU alarm scale down
 
-Name : * **{{environment}}**-ecs-**{{ecs_group_node}}**-cpu-alarm-scale-down**
+Name : * **{{environment}}**-ecs-**{{ecs_group_node}}**-cpu-alarm-scale-down
 
 This alarm reduces the number of instances in the instance group when the cpu consumption is greater than a threshold.
 
-#### I.5.2 - CPU alarm scale up
+#### CPU alarm scale up
 
-Name : * **{{environment}}**-ecs-**{{ecs_group_node}}**-cpu-alarm-scale-up**
+Name : * **{{environment}}**-ecs-**{{ecs_group_node}}**-cpu-alarm-scale-up
 
 This alarm increases the number of instances in the instance group when the cpu consumption is greater than a threshold.
 
-#### I.5.3 - Memory alarm scale down
+#### Memory alarm scale down
 
-Name : **{{environment}}**-ecs-**{{ecs_group_node}}**-memory-alarm-scale-down**
+Name : **{{environment}}**-ecs-**{{ecs_group_node}}**-memory-alarm-scale-down
 
 This alarm reduces the number of instances in the instance group when the memory consumption is greater than a threshold.
 
-#### I.5.4 - Memory alarm scale up
+#### Memory alarm scale up
 
 Name : **{{environment}}**-ecs-**{{ecs_group_node}}**-memory-alarm-scale-up
 
 This alarm increases the number of instances in the instance group when the memory consumption is greater than a threshold.
 
-### I.6 - AWS S3 shared bucket ( optional )
+### AWS S3 shared bucket ( optional )
 
 This terraform script created **One S3 Bucket**. This bucket can be used to exchange data as a file between ECS service.
 
 Name : **{{environment}}**-ecs-shared
 
-### I.7 - AWS IAM Role and Policies
+### AWS IAM Role and Policies
 
 This terraform script created a set of role iam.
 
-### I.7.1 - AWS IAM for EC2 cluster node
+#### AWS IAM for EC2 cluster node
 
 This IAM role is applied to differences in the instance group
 
 Name : **{{environment}}**-ecs-node-**{{ecs_group_node}}**-role
 
-### I.7.2 - AWS IAM for ECS service 
+#### AWS IAM for ECS service 
 
 This IAM role is applied to differences in the instance group
 
 Name : **{{environment}}**-ecs-service-**{{ecs_group_node}}**-role
 
-## II - Inputs / Outputs
+## Inputs / Outputs
 
 ### Inputs
 
@@ -153,13 +153,13 @@ Name : **{{environment}}**-ecs-service-**{{ecs_group_node}}**-role
 | asg\_min | The minimum numbers of instances in the auto scaling group. | number | 1 |
 | aws\_region | The AWS region to deploy | string | n/a |
 | bucket\_force\_destroy | The bucket and all objects should be destroyed when using true | bool | false |
-| create\_shared\_bucket | Create shared bucket | bool | false |
+| create\_shared\_bucket | Create shared S3 bucket | bool | false |
 | ecs\_agent\_loglevel | The level to log at on stdout for esc agent. | string | "info" |
-| ecs\_cloudwath\_retention\_in\_days | The Cloudwath retention days. | number | 7 |
+| ecs\_cloudwath\_retention\_in\_days | The Cloudwath retention days for all Cloudwath LogGroup created. | number | 7 |
 | ecs\_cluster\_name | The name of the ECS cluster. | string | n/a |
 | ecs\_enable\_task\_iam\_role | Enables IAM roles for tasks for containers with the bridge and default network modes. | bool | false |
 | ecs\_enable\_task\_iam\_role\_network\_host | Enables IAM roles for tasks for containers with the host network mode. This variable is only supported. | bool | false |
-| ecs\_group\_node | The groupe node | string | "default" |
+| ecs\_group\_node | The instance group node (show tag ECSGroup ). Use for placement strategy. | string | "default" |
 | ecs\_image\_pull\_behavior | The behavior used to customize the pull image process for your container instances. | string | "default" |
 | ecs\_optimized\_amis | The map of region to ecs optimized AMI. By default the latest available will be chosen. | map | {} |
 | environment | The logical name of the environment, will be used as prefix and in tags. | string | n/a |
@@ -167,7 +167,7 @@ Name : **{{environment}}**-ecs-service-**{{ecs_group_node}}**-role
 | instance\_type | Default AWS instance type. | string | "t2.small" |
 | key\_name | The name of AWS key pair | string | "" |
 | subnets | The subnets where the instances will be deployed to. | list(string) | n/a |
-| use\_shared\_bucket | Use shared bucket | bool | true |
+| use\_shared\_bucket | Use shared S3 bucket | bool | true |
 | user\_data | The override the module embedded user data script. | string | "" |
 | vpc\_cidr | The CIDR for the VPC. | string | n/a |
 | vpc\_id | The ID of the VPC. | string | n/a |
@@ -184,7 +184,7 @@ Name : **{{environment}}**-ecs-service-**{{ecs_group_node}}**-role
 | role\_node\_arn | The ARN of IAM role ecs instance role |
 | role\_service\_arn | The ARN of IAM role ecs service role |
 
-## III - Usage
+## Usage
 
 `````
 
