@@ -51,39 +51,6 @@ log_group_name = /aws/ecs/${ecs_cluster_name}/node/${ecs_group_node}/var/log/ecs
 log_stream_name = {container_instance_id}
 datetime_format = %Y-%m-%dT%H:%M:%SZ
 
-[/var/log/ecs/esc-restart.log]
-file = /var/log/ecs/ecs-restart.log.*
-log_group_name = /aws/ecs/${ecs_cluster_name}/node/${ecs_group_node}/var/log/ecs/ecs-restart.log
-log_stream_name = {container_instance_id}
-datetime_format = %Y-%m-%dT%H:%M:%SZ
-
-EOF
---==BOUNDARY==
-Content-Type: text/x-shellscript; charset="us-ascii"
-#!/usr/bin/env bash
-# Write the restart daemon ecs script to /usr/local/bin/ecs-restart.sh
-cat > /usr/local/bin/ecs-restart.sh <<- 'EOF'
-#!/usr/bin/env bash
-dt=$(date '+%Y-%m-%d-%H')
-exec 2>>/var/log/ecs/ecs-restart.log.$dt
-systemctl restart ecs
-if [ $? -ne 0 ]
-then
-    echo 'systemctl restart ecs : FAILURE'
-    exit 1
-else
-    echo 'systemctl restart ecs : SUCCESS'
-fi
-EOF
-
---==BOUNDARY==
-Content-Type: text/x-shellscript; charset="us-ascii"
-#!/usr/bin/env bash
-cat > /etc/logrotate.d/ecs-restart <<- 'EOF'
-/var/log/ecs/ecs-restart.log* {
-    rotate 24
-    daily
-}
 EOF
 
 --==BOUNDARY==
@@ -168,12 +135,10 @@ systemctl start amazon-ssm-agent
 --==BOUNDARY==
 Content-Type: text/x-shellscript; charset="us-ascii"
 #!/bin/sh
-chmod +x /usr/local/bin/ecs-restart.sh
-
 #write out current crontab
 crontab -l > ecs_restart
 #echo new cron into cron file
-echo "* * * * * /usr/local/bin/ecs-restart.sh" >> ecs_restart
+echo "5 * * * * systemctl restart ecs" >> ecs_restart
 #install ecs_restart file
 crontab ecs_restart
 

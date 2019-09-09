@@ -399,15 +399,3 @@ resource "aws_cloudwatch_log_group" "ecs_var_log_ecs_audit_log" {
 
   retention_in_days = var.ecs_cloudwath_retention_in_days
 }
-
-resource "aws_cloudwatch_log_group" "ecs_var_log_ecs_ecs_restart_log" {
-  name = "/aws/ecs/${var.ecs_cluster_name}/node/${local.ecs_group_node}/var/log/ecs/ecs-restart.log"
-
-  tags = {
-    Name        = "${var.ecs_cluster_name}/node/${local.ecs_group_node}/var/log/ecs/ecs-restart.log"
-    Environment = var.environment
-    ECSGroup    = var.ecs_group_node
-  }
-
-  retention_in_days = 1
-}
