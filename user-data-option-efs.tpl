@@ -5,6 +5,6 @@ Content-Type: text/x-shellscript; charset="us-ascii"
 yum install -y amazon-efs-utils
 
 # create directory for mount point efs
-mkdir -p ${efs_directory}
-echo "${efs_mount_point}:/ ${efs_directory} efs tls,_netdev" >> /etc/fstab
+mkdir -p ${efs_mount_point}
+echo "${efs_volume}:/ ${efs_mount_point} efs tls,_netdev" >> /etc/fstab
 mount -a -t efs defaults
