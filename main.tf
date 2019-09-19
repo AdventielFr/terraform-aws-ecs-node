@@ -38,7 +38,7 @@ data "aws_iam_policy_document" "node_role" {
 }
 
 data "template_file" "user_data_efs_option_tpl" {
-  template = "${file("${path.module}/user-data-option-efs.tpl")}"
+  template = "${file("${path.module}/user-data-opt-efs.tpl")}"
 
   vars = {
     efs_mount_point = var.efs_mount_point
