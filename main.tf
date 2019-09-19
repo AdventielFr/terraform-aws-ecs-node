@@ -37,19 +37,6 @@ data "aws_iam_policy_document" "node_role" {
   }
 }
 
-data "template_file" "user_data_efs_option_tpl" {
-  template = "${file("${path.module}/user-data-option-efs.tpl")}"
-
-  vars = {
-    efs_mount_point = var.efs_mount_point
-    efs_volume = var.efs_volume
-  }
-}
-
-locals {
-  user_data_option_efs = var.efs_volume == "" ? "" : data.template_file.user_data_efs_option_tpl.rendered
-}
-
 
 data "template_file" "user_data_tpl" {
   template = "${file("${path.module}/user-data.tpl")}"
@@ -63,7 +50,24 @@ data "template_file" "user_data_tpl" {
     ecs_group_node = local.ecs_group_node
     ecs_enable_task_iam_role = var.ecs_enable_task_iam_role
     ecs_enable_task_iam_role_network_host = var.ecs_enable_task_iam_role_network_host
+  }
+}
+
+data "template_file" "user_data_with_efs_tpl" {
+  template = "${file("${path.module}/user-data-with-efs.tpl")}"
+
+  vars = {
+    ecs_cluster_name = var.ecs_cluster_name
+    ecs_group_node = local.ecs_group_node
+    aws_region = var.aws_region
+    ecs_agent_loglevel = var.ecs_agent_loglevel
+    ecs_image_pull_behavior = var.ecs_image_pull_behavior
+    ecs_group_node = local.ecs_group_node
+    ecs_enable_task_iam_role = var.ecs_enable_task_iam_role
+    ecs_enable_task_iam_role_network_host = var.ecs_enable_task_iam_role_network_host
     user_data_option_efs = local.user_data_option_efs
+    efs_mount_point = var.efs_mount_point
+    efs_volume = var.efs_volume
   }
 }
 
@@ -86,7 +90,7 @@ locals {
   aws_ami_userdefined = "${lookup(var.ecs_optimized_amis, var.aws_region, "")}"
   aws_ami             = "${local.aws_ami_userdefined == "" ? data.aws_ami.aws_optimized_ecs.id : local.aws_ami_userdefined}"
   use_bucket          = var.create_shared_bucket ? true : var.use_shared_bucket
-  user_data_aws       = "${var.user_data == "" ? data.template_file.user_data_tpl.rendered : var.user_data}"
+  user_data_aws       = var.user_data == "" ?  ( var.efs_volume == "" ?  data.template_file.user_data_tpl.rendered : data.template_file.user_data_with_efs_tpl.rendered) : var.user_data
   shared_bucker_id    = "arn:aws:s3:::${data.aws_caller_identity.current.account_id}-${var.environment}-ecs-shared"
   ecs_group_node      = var.ecs_group_node == "" ? "default": var.ecs_group_node
 
