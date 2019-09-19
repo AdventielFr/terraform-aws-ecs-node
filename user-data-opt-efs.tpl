@@ -4,8 +4,8 @@ Content-Type: text/x-shellscript; charset="us-ascii"
 # Install amazon efs utils
 yum install -y amazon-efs-utils nfs-utils
 
-DIR_TGT="${efs_volume}"
-DIR_SRC="${efs_mount_point}"
+DIR_TGT="${efs_mount_point}"
+DIR_SRC="${efs_volume_dnsname}"
 #Create mount point
 mkdir -p $DIR_TGT
 #Mount EFS file system
