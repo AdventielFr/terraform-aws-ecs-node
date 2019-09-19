@@ -58,7 +58,7 @@ data "template_file" "user_data_tpl" {
     ecs_group_node = local.ecs_group_node
     ecs_enable_task_iam_role = var.ecs_enable_task_iam_role
     ecs_enable_task_iam_role_network_host = var.ecs_enable_task_iam_role_network_host
-    user_data_option_efs = var.efs_volume_dnsname == "" ? "" : data.template_file.user_data_efs_option_tpl.rendered
+    user_data_option_efs = var.efs_volume == "" ? "" : data.template_file.user_data_efs_option_tpl.rendered
   }
 }
 
