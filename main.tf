@@ -42,7 +42,7 @@ data "template_file" "user_data_efs_option_tpl" {
 
   vars = {
     efs_mount_point = var.efs_mount_point
-    efs_volume_dnsname = var.efs_volume_dnsname
+    efs_volume = var.efs_volume
   }
 }
 
