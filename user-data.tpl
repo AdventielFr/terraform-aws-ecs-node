@@ -142,3 +142,4 @@ echo "*/10 * * * * systemctl restart ecs" >> ecs_restart
 #install ecs_restart file
 crontab ecs_restart
 
+${option-efs}

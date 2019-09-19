@@ -206,3 +206,15 @@ variable "alarm_policy_scale_down_cool_down" {
   default     = 300
   type        = number
 }
+
+variable "efs_volume" {
+  description = "The EFS volume to attach to ec2 instances. ( ex : fs-05a856xx)"
+  type = string
+  default = ""
+}
+
+variable "efs_mount_point" {
+  description = "The EFS volume mount point for EC2 instances."
+  type = "string"
+  default ="/mnt/efs"
+}

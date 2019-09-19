@@ -49,6 +49,16 @@ data "template_file" "user_data_tpl" {
     ecs_group_node = local.ecs_group_node
     ecs_enable_task_iam_role = var.ecs_enable_task_iam_role
     ecs_enable_task_iam_role_network_host = var.ecs_enable_task_iam_role_network_host
+    user_data_option_efs = var.efs_volume == "" ? "" : data.template_file.user_data_efs_option_tpl.rendered
+  }
+}
+
+data "template_file" "user_data_efs_option_tpl" {
+  template = "${file("${path.module}/user-data-option-efs.tpl")}"
+
+  vars = {
+    efs_mount_point = var.efs_mount_point
+    efs_volume = var.efs_volume
   }
 }
 
@@ -74,6 +84,7 @@ locals {
   user_data_aws       = "${var.user_data == "" ? data.template_file.user_data_tpl.rendered : var.user_data}"
   shared_bucker_id    = "arn:aws:s3:::${data.aws_caller_identity.current.account_id}-${var.environment}-ecs-shared"
   ecs_group_node      = var.ecs_group_node == "" ? "default": var.ecs_group_node
+
 }
 
 #----------------------
