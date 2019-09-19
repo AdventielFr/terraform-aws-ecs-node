@@ -162,6 +162,8 @@ Name : **{{environment}}**-ecs-service-**{{ecs_group_node}}**-role
 | ecs\_group\_node | The instance group node (show tag ECSGroup ). Use for placement strategy. | string | "default" |
 | ecs\_image\_pull\_behavior | The behavior used to customize the pull image process for your container instances. | string | "default" |
 | ecs\_optimized\_amis | The map of region to ecs optimized AMI. By default the latest available will be chosen. | map | {} |
+| efs\_mount\_point | The EFS volume mount point for EC2 instances. | "string" | "/mnt/efs" |
+| efs\_volume | The EFS volume to attach to ec2 instances. ( ex : fs-05a856xx) | string | "" |
 | environment | The logical name of the environment, will be used as prefix and in tags. | string | n/a |
 | instance\_security\_groups | The List of security group for ecs cluster node. | list(string) | n/a |
 | instance\_type | Default AWS instance type. | string | "t2.small" |
