@@ -65,7 +65,6 @@ data "template_file" "user_data_with_efs_tpl" {
     ecs_group_node = local.ecs_group_node
     ecs_enable_task_iam_role = var.ecs_enable_task_iam_role
     ecs_enable_task_iam_role_network_host = var.ecs_enable_task_iam_role_network_host
-    user_data_option_efs = local.user_data_option_efs
     efs_mount_point = var.efs_mount_point
     efs_volume = var.efs_volume
   }
