@@ -207,8 +207,8 @@ variable "alarm_policy_scale_down_cool_down" {
   type        = number
 }
 
-variable "efs_volume_dnsname" {
-  description = "The DNS of EFS volume to attach to ec2 instances. ( ex : fs-05a85cxxx.efs.eu-west-3.amazonaws.com)"
+variable "efs_volume" {
+  description = "The EFS volume to attach to ec2 instances. ( ex : fs-05a856xx)"
   type = string
   default = ""
 }
