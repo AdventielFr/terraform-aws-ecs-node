@@ -37,6 +37,20 @@ data "aws_iam_policy_document" "node_role" {
   }
 }
 
+data "template_file" "user_data_efs_option_tpl" {
+  template = "${file("${path.module}/user-data-option-efs.tpl")}"
+
+  vars = {
+    efs_mount_point = var.efs_mount_point
+    efs_volume = var.efs_volume
+  }
+}
+
+locals {
+  ser_data_efs_option = var.efs_volume == "" ? "" : data.template_file.user_data_efs_option_tpl.rendered
+}
+
+
 data "template_file" "user_data_tpl" {
   template = "${file("${path.module}/user-data.tpl")}"
 
@@ -49,16 +63,7 @@ data "template_file" "user_data_tpl" {
     ecs_group_node = local.ecs_group_node
     ecs_enable_task_iam_role = var.ecs_enable_task_iam_role
     ecs_enable_task_iam_role_network_host = var.ecs_enable_task_iam_role_network_host
-    user_data_option_efs = var.efs_volume == "" ? "" : data.template_file.user_data_efs_option_tpl.rendered
-  }
-}
-
-data "template_file" "user_data_efs_option_tpl" {
-  template = "${file("${path.module}/user-data-option-efs.tpl")}"
-
-  vars = {
-    efs_mount_point = var.efs_mount_point
-    efs_volume = var.efs_volume
+    user_data_option_efs = local.user_data_efs_option
   }
 }
 
