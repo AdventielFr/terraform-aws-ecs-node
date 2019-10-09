@@ -16,6 +16,23 @@ echo ECS_INSTANCE_ATTRIBUTES="{\"ECSGroup\":\"${ecs_group_node}\"}" >> /etc/ecs/
 echo ECS_IMAGE_PULL_BEHAVIOR=${ecs_image_pull_behavior} >> /etc/ecs/ecs.config
 echo ECS_ENABLE_TASK_IAM_ROLE=${ecs_enable_task_iam_role} >> /etc/ecs/ecs.config
 echo ECS_ENABLE_TASK_IAM_ROLE_NETWORK_HOST=${ecs_enable_task_iam_role_network_host} >> /etc/ecs/ecs.config
+echo ECS_DISABLE_IMAGE_CLEANUP=${ecs_disable_image_cleanup} >> /etc/ecs/ecs.config
+echo ECS_IMAGE_CLEANUP_INTERVAL=${ecs_image_cleanup_interval} >> /etc/ecs/ecs.config
+echo ECS_IMAGE_MINIMUM_CLEANUP_AGE=${ecs_image_minimum_cleanup_age} >> /etc/ecs/ecs.config
+echo ECS_NUM_IMAGES_DELETE_PER_CYCLE=${ecs_num_images_delete_per_cycle} >> /etc/ecs/ecs.config
+echo ECS_CONTAINER_STOP_TIMEOUT=${ecs_container_stop_timeout} >> /etc/ecs/ecs.config
+echo ECS_CONTAINER_START_TIMEOUT=${ecs_container_start_timeout} >> /etc/ecs/ecs.config
+echo ECS_ENABLE_SPOT_INSTANCE_DRAINING=${ecs_enable_spot_instance_draining} >> /etc/ecs/ecs.config
+echo ECS_DISABLE_PRIVILEGED=${ecs_disable_privileged} >> /etc/ecs/ecs.config
+echo ECS_SELINUX_CAPABLE=${ecs_selinux_capable} >> /etc/ecs/ecs.config
+echo ECS_APPARMOR_CAPABLE=${ecs_apparmor_capable} >> /etc/ecs/ecs.config
+echo ECS_ENGINE_TASK_CLEANUP_WAIT_DURATION=${ecs_engine_task_cleanup_wait_duration} >> /etc/ecs/ecs.config
+echo ECS_ENABLE_TASK_ENI=${ecs_enable_task_eni} >> /etc/ecs/ecs.config
+echo ECS_CNI_PLUGINS_PATH=${ecs_cni_plugins_path} >> /etc/ecs/ecs.config
+echo ECS_DISABLE_DOCKER_HEALTH_CHECK=${ecs_disable_docker_health_check} >> /etc/ecs/ecs.config
+${ecs_http_proxy}
+${ecs_no_proxy}
+
 
 # Inject the CloudWatch Logs configuration file contents
 cat > /etc/awslogs/awslogs.conf <<- EOF
@@ -51,16 +68,6 @@ log_group_name = /aws/ecs/${ecs_cluster_name}/node/${ecs_group_node}/var/log/ecs
 log_stream_name = {container_instance_id}
 datetime_format = %Y-%m-%dT%H:%M:%SZ
 
-EOF
-
---==BOUNDARY==
-Content-Type: text/x-shellscript; charset="us-ascii"
-#!/usr/bin/env bash
-cat > /etc/logrotate.d/ecs-init <<- 'EOF'
-/var/log/ecs/ecs-init.log* {
-    rotate 24
-    daily
-}
 EOF
 
 --==BOUNDARY==
@@ -131,15 +138,5 @@ Content-Type: text/x-shellscript; charset="us-ascii"
 systemctl daemon-reload
 systemctl enable amazon-ssm-agent
 systemctl start amazon-ssm-agent
-
---==BOUNDARY==
-Content-Type: text/x-shellscript; charset="us-ascii"
-#!/bin/sh
-#write out current crontab
-crontab -l > ecs_restart
-#echo new cron into cron file
-echo "*/5 * * * * systemctl restart ecs" >> ecs_restart
-#install ecs_restart file
-crontab ecs_restart
 
 ${user_data_option_efs}

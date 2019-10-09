@@ -58,6 +58,23 @@ data "template_file" "user_data_tpl" {
     ecs_group_node = local.ecs_group_node
     ecs_enable_task_iam_role = var.ecs_enable_task_iam_role
     ecs_enable_task_iam_role_network_host = var.ecs_enable_task_iam_role_network_host
+    ecs_disable_image_cleanup=var.ecs_disable_image_cleanup
+    ecs_image_cleanup_interval=var.ecs_image_cleanup_interval
+    ecs_image_minimum_cleanup_age=var.ecs_image_minimum_cleanup_age
+    ecs_num_images_delete_per_cycle=var.ecs_num_images_delete_per_cycle
+    ecs_container_stop_timeout=var.ecs_container_stop_timeout
+    ecs_container_start_timeout=var.ecs_container_start_timeout
+    ecs_enable_spot_instance_draining=var.ecs_enable_spot_instance_draining
+    ecs_disable_privileged=var.ecs_disable_privileged
+    ecs_selinux_capable=var.ecs_selinux_capable
+    ecs_apparmor_capable=var.ecs_selinux_capable
+    ecs_engine_task_cleanup_wait_duration=var.ecs_selinux_capable
+    ecs_enable_task_eni=var.ecs_enable_task_eni
+    ecs_http_proxy=local.ecs_http_proxy
+    ecs_no_proxy=local.ecs_no_proxy
+    esc_cni_plugins_path=var.esc_cni_plugins_path
+    ecs_disable_docker_health_check=var.ecs_disable_docker_health_check
+
     user_data_option_efs = var.efs_volume == "" ? "" : data.template_file.user_data_efs_option_tpl.rendered
   }
 }
@@ -84,7 +101,8 @@ locals {
   user_data_aws       = "${var.user_data == "" ? data.template_file.user_data_tpl.rendered : var.user_data}"
   shared_bucker_id    = "arn:aws:s3:::${data.aws_caller_identity.current.account_id}-${var.environment}-ecs-shared"
   ecs_group_node      = var.ecs_group_node == "" ? "default": var.ecs_group_node
-
+  ecs_http_proxy      = var.ecs_http_proxy != "" ? "echo HTTP_PROXY=${var.ecs_http_proxy} >> /etc/ecs/ecs.config" : ""
+  ecs_no_proxy        = var.ecs_no_proxy != "" ? "echo NO_PROXY=${var.ecs_no_proxy} >> /etc/ecs/ecs.config" : ""
 }
 
 #----------------------

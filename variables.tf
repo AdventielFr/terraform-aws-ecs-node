@@ -129,6 +129,120 @@ variable "ecs_enable_task_iam_role_network_host" {
   type        = bool
 }
 
+variable "ecs_enable_task_iam_role" {
+  description = "Enables IAM roles for tasks for containers with the bridge and default network modes."
+  default     = false
+  type        = bool
+}
+
+variable "ecs_disable_image_cleanup" {
+  description = "Whether to disable automated image cleanup for the Amazon ECS agent. For more information."
+  default     = false
+  type        = bool
+}
+
+variable "ecs_image_cleanup_interval" {
+  description = "The time interval between automated image cleanup cycles. If set to less than 10 minutes, the value is ignored."
+  default     = "30m"
+  type        = string
+
+
+variable "ecs_image_minimum_cleanup_age" {
+  description = "The minimum time interval between when an image is pulled and when it can be considered for automated image cleanup."
+  default     = "1h"
+  type        = string
+}
+
+variable "ecs_num_images_delete_per_cycle" {
+  description = "The maximum number of images to delete in a single automated image cleanup cycle. If set to less than 1, the value is ignored."
+  default     = 5
+  type        = number
+}
+
+variable "ecs_enable_container_metadata" {
+  description = "When true, the agent creates a file describing the container's metadata. The file can be located and consumed by using the container environment variable $ECS_CONTAINER_METADATA_FILE."
+  default     = true
+  type        = bool
+}
+
+variable "ecs_enable_container_metadata" {
+  description = "When true, the agent creates a file describing the container's metadata. The file can be located and consumed by using the container environment variable $ECS_CONTAINER_METADATA_FILE."
+  default     = true
+  type        = bool
+}
+
+variable "ecs_container_start_timeout" {
+  description = "Time duration to wait before giving up on starting a container."
+  default     = "3m"
+  type        = string
+}
+
+variable "ecs_container_stop_timeout" {
+  description = "Time duration to wait from when a task is stopped before its containers are forcefully killed if they do not exit normally on their own."
+  default     = "3Os"
+  type        = string
+}
+
+variable "ecs_enable_spot_instance_draining" {
+  description = "Whether to enable Spot Instance draining for the container instance."
+  default     = false
+  type        = bool
+}
+
+variable "ecs_disable_privileged" {
+  description = "Whether launching privileged containers is disabled on the container instance. If this value is set to true, privileged containers are not permitted."
+  default     = false
+  type        = bool
+}
+
+variable "ecs_selinux_capable" {
+  description = "Whether SELinux is available on the container instance."
+  default     = false
+  type        = bool
+}
+
+variable "ecs_apparmor_capable" {
+  description = "Whether AppArmor is available on the container instance."
+  default     = false
+  type        = bool  
+}
+
+variable "ecs_engine_task_cleanup_wait_duration" {
+  description = "Time duration to wait from when a task is stopped until the Docker container is removed. As this removes the Docker container data, be aware that if this value is set too low, you may not be able to inspect your stopped containers or view the logs before they are removed. The minimum duration is 1m; any value shorter than 1 minute is ignored."
+  default     = "3h"
+  type        = string  
+}
+
+variable "ecs_http_proxy" {
+  description = "The hostname (or IP address) and port number of an HTTP proxy to use for the ECS agent to connect to the internet (for example, if your container instances do not have external network access through an Amazon VPC internet gateway or NAT gateway or instance). If this variable is set, you must also set the NO_PROXY variable to filter EC2 instance metadata and Docker daemon traffic from the proxy."
+  default = ""
+  type = string
+}
+
+variable "ecs_no_proxy" {
+  description = "The HTTP traffic that should not be forwarded to the specified HTTP_PROXY. You must specify 169.254.169.254,/var/run/docker.sock to filter EC2 instance metadata and Docker daemon traffic from the proxy."
+  default = ""
+  type = string
+}
+
+variable "ecs_enable_task_eni" {
+  description = "Whether to enable task networking for tasks to be launched with their own network interface."
+  default = false
+  type = bool
+}
+
+variable "ecs_cni_plugins_path" {
+  description = "The path where the cni binary file is located."
+  default = "/amazon-ecs-cni-plugins"
+  type = string  
+}
+
+variable "ecs_disable_docker_health_check" {
+  description = "Whether to disable the Docker container health check for the ECS Agent."
+  default = false
+  type = bool
+}
+
 variable "ecs_agent_loglevel" {
   description= "The level to log at on stdout for esc agent."
   default     = "info"

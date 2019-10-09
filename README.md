@@ -155,13 +155,31 @@ Name : **{{environment}}**-ecs-service-**{{ecs_group_node}}**-role
 | bucket\_force\_destroy | The bucket and all objects should be destroyed when using true | bool | false |
 | create\_shared\_bucket | Create shared S3 bucket | bool | false |
 | ecs\_agent\_loglevel | The level to log at on stdout for esc agent. | string | "info" |
+| ecs\_apparmor\_capable | Whether AppArmor is available on the container instance. | bool | false |
 | ecs\_cloudwath\_retention\_in\_days | The Cloudwath retention days for all Cloudwath LogGroup created. | number | 7 |
 | ecs\_cluster\_name | The name of the ECS cluster. | string | n/a |
+| ecs\_cni\_plugins\_path | The path where the cni binary file is located. | string | "/amazon-ecs-cni-plugins" |
+| ecs\_container\_start\_timeout | Time duration to wait before giving up on starting a container. | string | "3m" |
+| ecs\_container\_stop\_timeout | Time duration to wait from when a task is stopped before its containers are forcefully killed if they do not exit normally on their own. | string | "3Os" |
+| ecs\_disable\_docker\_health\_check | Whether to disable the Docker container health check for the ECS Agent. | bool | false |
+| ecs\_disable\_image\_cleanup | Whether to disable automated image cleanup for the Amazon ECS agent. For more information. | bool | false |
+| ecs\_disable\_privileged | Whether launching privileged containers is disabled on the container instance. If this value is set to true, privileged containers are not permitted. | bool | false |
+| ecs\_enable\_container\_metadata | When true, the agent creates a file describing the container's metadata. The file can be located and consumed by using the container environment variable $ECS\_CONTAINER\_METADATA\_FILE. | bool | true |
+| ecs\_enable\_container\_metadata | When true, the agent creates a file describing the container's metadata. The file can be located and consumed by using the container environment variable $ECS\_CONTAINER\_METADATA\_FILE. | bool | true |
+| ecs\_enable\_spot\_instance\_draining | Whether to enable Spot Instance draining for the container instance. | bool | false |
+| ecs\_enable\_task\_eni | Whether to enable task networking for tasks to be launched with their own network interface. | bool | false |
+| ecs\_enable\_task\_iam\_role | Enables IAM roles for tasks for containers with the bridge and default network modes. | bool | false |
 | ecs\_enable\_task\_iam\_role | Enables IAM roles for tasks for containers with the bridge and default network modes. | bool | false |
 | ecs\_enable\_task\_iam\_role\_network\_host | Enables IAM roles for tasks for containers with the host network mode. This variable is only supported. | bool | false |
+| ecs\_engine\_task\_cleanup\_wait\_duration | Time duration to wait from when a task is stopped until the Docker container is removed. As this removes the Docker container data, be aware that if this value is set too low, you may not be able to inspect your stopped containers or view the logs before they are removed. The minimum duration is 1m; any value shorter than 1 minute is ignored. | string | "3h" |
 | ecs\_group\_node | The instance group node (show tag ECSGroup ). Use for placement strategy. | string | "default" |
+| ecs\_http\_proxy | The hostname (or IP address) and port number of an HTTP proxy to use for the ECS agent to connect to the internet (for example, if your container instances do not have external network access through an Amazon VPC internet gateway or NAT gateway or instance). If this variable is set, you must also set the NO\_PROXY variable to filter EC2 instance metadata and Docker daemon traffic from the proxy. | string | "" |
+| ecs\_image\_cleanup\_interval | The minimum time interval between when an image is pulled and when it can be considered for automated image cleanup. | string | "1h" |
 | ecs\_image\_pull\_behavior | The behavior used to customize the pull image process for your container instances. | string | "default" |
+| ecs\_no\_proxy | The HTTP traffic that should not be forwarded to the specified HTTP\_PROXY. You must specify 169.254.169.254,/var/run/docker.sock to filter EC2 instance metadata and Docker daemon traffic from the proxy. | string | "" |
+| ecs\_num\_images\_delete\_per\_cycle | The maximum number of images to delete in a single automated image cleanup cycle. If set to less than 1, the value is ignored. | number | 5 |
 | ecs\_optimized\_amis | The map of region to ecs optimized AMI. By default the latest available will be chosen. | map | {} |
+| ecs\_selinux\_capable | Whether SELinux is available on the container instance. | bool | false |
 | efs\_mount\_point | The EFS volume mount point for EC2 instances. | "string" | "/mnt/efs" |
 | efs\_volume | The EFS volume to attach to ec2 instances. ( ex : fs-05a856xx) | string | "" |
 | environment | The logical name of the environment, will be used as prefix and in tags. | string | n/a |
