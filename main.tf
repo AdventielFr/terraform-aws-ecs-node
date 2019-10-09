@@ -50,6 +50,7 @@ data "template_file" "user_data_tpl" {
   template = "${file("${path.module}/user-data.tpl")}"
 
   vars = {
+    environment = var.environment
     ecs_cluster_name = var.ecs_cluster_name
     ecs_group_node = local.ecs_group_node
     aws_region = var.aws_region
@@ -74,7 +75,6 @@ data "template_file" "user_data_tpl" {
     ecs_no_proxy=local.ecs_no_proxy
     ecs_cni_plugins_path=var.ecs_cni_plugins_path
     ecs_disable_docker_health_check=var.ecs_disable_docker_health_check
-
     user_data_option_efs = var.efs_volume == "" ? "" : data.template_file.user_data_efs_option_tpl.rendered
   }
 }
