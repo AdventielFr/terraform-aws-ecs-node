@@ -81,10 +81,6 @@ data "template_file" "user_data_tpl" {
 
 data "template_file" "node_role_policy_tpl" {
   template = "${file("${path.module}/node-role-policy.tpl")}"
-
-  vars = {
-    bucket_restriction = local.shared_bucker_id
-  }
 }
 
 data "template_file" "service_role_policy_tpl" {
