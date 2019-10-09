@@ -113,9 +113,10 @@ resource "aws_launch_template" "this" {
   instance_type           = var.instance_type
   key_name                = var.key_name
   
-  network_interfaces {
-    associate_public_ip_address = false
-  }
+  #network_interfaces {
+  #  associate_public_ip_address = false
+  #  security_groups = var.instance_security_groups
+  #}
 
   iam_instance_profile {
     name = aws_iam_instance_profile.this.name
