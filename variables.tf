@@ -3,24 +3,6 @@ variable "aws_region" {
   type        = string
 }
 
-variable "bucket_force_destroy" {
-  type        = bool
-  default     = false
-  description = "The bucket and all objects should be destroyed when using true"
-}
-
-variable "create_shared_bucket" {
-  type        = bool
-  default     = false
-  description = "Create shared S3 bucket"
-}
-
-variable "use_shared_bucket" {
-  type        = bool
-  default     = true
-  description = "Use shared S3 bucket"
-}
-
 variable "key_name" {
   description = "The name of AWS key pair"
   type        = string
@@ -47,7 +29,7 @@ variable "asg_max" {
 
 variable "asg_health_period" {
   description = "Time (in seconds) after instance comes into service before checking health."
-  default     = 300
+  default     = 180
   type        = number
 }
 
@@ -89,7 +71,7 @@ variable "ecs_cluster_name" {
 }
 
 variable "ecs_group_node" {
-  description = "The instance group node (show tag ECSGroup ). Use for placement strategy."
+  description = "The instance group node (show tag EcsGroupNode). Use for placement strategy."
   type        = string
   default     = "default"
 }
@@ -241,6 +223,30 @@ variable "alarm_cpu_scale_up_threshold" {
   description = "The CPU consumption threshold of the instance group that triggers an increase in the number of instances in the instance group"
   type        = number
   default     = 90
+}
+
+variable "alarm_cpu_scale_up_period" {
+  description = "The CPU period of the instance group that triggers an increase in the number of instances in the instance group"
+  type        = number
+  default     = 180
+}
+
+variable "alarm_cpu_scale_down_period" {
+  description = "The CPU period of the instance group that triggers an increase in the number of instances in the instance group"
+  type        = number
+  default     = 180
+}
+
+variable "alarm_memory_scale_up_period" {
+  description = "The memory period of the instance group that triggers an increase in the number of instances in the instance group"
+  type        = number
+  default     = 180
+}
+
+variable "alarm_memoryscale_down_period" {
+  description = "The memory period of the instance group that triggers an increase in the number of instances in the instance group"
+  type        = number
+  default     = 180
 }
 
 variable "alarm_cpu_scale_down_threshold" {

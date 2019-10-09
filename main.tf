@@ -97,9 +97,7 @@ data "template_file" "service_role_policy_tpl" {
 locals {
   aws_ami_userdefined = "${lookup(var.ecs_optimized_amis, var.aws_region, "")}"
   aws_ami             = "${local.aws_ami_userdefined == "" ? data.aws_ami.aws_optimized_ecs.id : local.aws_ami_userdefined}"
-  use_bucket          = var.create_shared_bucket ? true : var.use_shared_bucket
   user_data_aws       = "${var.user_data == "" ? data.template_file.user_data_tpl.rendered : var.user_data}"
-  shared_bucker_id    = "arn:aws:s3:::${data.aws_caller_identity.current.account_id}-${var.environment}-ecs-shared"
   ecs_group_node      = var.ecs_group_node == "" ? "default": var.ecs_group_node
   ecs_http_proxy      = var.ecs_http_proxy != "" ? "echo HTTP_PROXY=${var.ecs_http_proxy} >> /etc/ecs/ecs.config" : ""
   ecs_no_proxy        = var.ecs_no_proxy != "" ? "echo NO_PROXY=${var.ecs_no_proxy} >> /etc/ecs/ecs.config" : ""
@@ -115,18 +113,42 @@ resource "aws_launch_template" "this" {
   image_id                = local.aws_ami
   description             = "Launch template for EC2 node '${local.ecs_group_node}' of ${var.ecs_cluster_name} ECS cluster."
   vpc_security_group_ids  = var.instance_security_groups
-  user_data               = local.user_data_aws
+  user_data               = base64encode(local.user_data_aws)
   instance_type           = var.instance_type
+  key_name                = var.key_name
+  
+  network_interfaces {
+    associate_public_ip_address = false
+  }
+
+  iam_instance_profile {
+    name = aws_iam_instance_profile.this.name
+  } 
+
   lifecycle {
     create_before_destroy = true
   }
-  tags {
+
+  tags = {
     Name = "${var.environment}-ecs-node-${local.ecs_group_node}-lt"
     Environment = var.environment
-    ECSGroup = ecs_group_node
+    EcsGroupNode = var.ecs_group_node
   }
-} 
 
+  tag_specifications {
+     resource_type = "instance"
+     tags = {
+       Name = "${var.environment}-ecs-node-${local.ecs_group_node}"
+       Environment = var.environment
+       EcsGroupNode = local.ecs_group_node
+     }
+  }
+
+  monitoring {
+    enabled = true
+  }
+
+} 
 
 # auto scaling group
 resource "aws_autoscaling_group" "this" {
@@ -140,28 +162,9 @@ resource "aws_autoscaling_group" "this" {
     id      = "${aws_launch_template.this.id}"
     version = "$Latest"
   }
-
-  tag {
-    key                 = "Name"
-    value               = "${var.environment}-ecs-node-${local.ecs_group_node}"
-    propagate_at_launch = true
-  }
-
-  tag {
-    key                 = "Environment"
-    value               = var.environment
-    propagate_at_launch = true
-  } 
-
-  tag {
-    key                 = "ECSGroup"
-    value               = local.ecs_group_node
-    propagate_at_launch = true
-  }
 }
 
 # iam ec2 cluster node role
-
 resource "aws_iam_role" "node_role" {
   name               = "${var.environment}-ecs-node-${local.ecs_group_node}-role"
   description        = "Role to enable to manage EC2 node '${local.ecs_group_node}' of ${var.ecs_cluster_name} ECS cluster."
@@ -170,7 +173,7 @@ resource "aws_iam_role" "node_role" {
   tags = {
     Name        = "${var.environment}-ecs-node-${local.ecs_group_node}-role"
     Environment = var.environment
-    ECSGroup    = local.ecs_group_node
+    EcsGroupNode   = local.ecs_group_node
   }
 }
 
@@ -185,7 +188,6 @@ resource "aws_iam_role_policy_attachment" "ecs_node_role_attachment_2" {
 }
 
 resource "aws_iam_role_policy" "ecs_instance" {
-  count = local.use_bucket ? 1 : 0
   name   = "${var.environment}-ecs-node-${local.ecs_group_node}-policy"
   role   = aws_iam_role.node_role.name
   policy = data.template_file.node_role_policy_tpl.rendered
@@ -204,7 +206,7 @@ resource "aws_iam_role" "service_role" {
   tags = {
     Name        = "${var.environment}-ecs-service-${local.ecs_group_node}-role"
     Environment = var.environment
-    ECSGroup    = local.ecs_group_node
+    EcsGroupNode   = local.ecs_group_node
   }
 }
 
@@ -213,43 +215,6 @@ resource "aws_iam_role_policy" "service_role_policy" {
   role   = aws_iam_role.service_role.name
   policy = data.template_file.service_role_policy_tpl.rendered
 }
-
-# s3 bucket share
-resource "aws_s3_bucket" "ecs_s3_bucket" {
-  count         = var.create_shared_bucket ? 1 : 0
-  bucket        = "${data.aws_caller_identity.current.account_id}-${var.environment}-ecs-shared"
-  force_destroy =  var.bucket_force_destroy
-
-  tags = {
-    Name        = "${data.aws_caller_identity.current.account_id}-${var.environment}-ecs-shared"
-    Environment = var.environment
-  }
-}
-
-resource "aws_s3_bucket_object" "ecs_s3_bucket_in" {
-  count   = var.create_shared_bucket ? 1 : 0
-  bucket  = element(aws_s3_bucket.ecs_s3_bucket.*.id,0)
-  acl     = "private"
-  key     = "/in/README.txt"
-  content = "Contains the files to process"
-}
-
-resource "aws_s3_bucket_object" "ecs_s3_bucket_out" {
-  count   = var.create_shared_bucket ? 1 : 0
-  bucket  = element(aws_s3_bucket.ecs_s3_bucket.*.id,0)
-  acl     = "private"
-  key     = "/out/README.txt"
-  content = "Contains the treatment results files"
-}
-
-resource "aws_s3_bucket_object" "ecs_s3_bucket_tmp" {
-  count   = var.create_shared_bucket ? 1 : 0
-  bucket  = element(aws_s3_bucket.ecs_s3_bucket.*.id,0)
-  acl     = "private"
-  key     = "/tmp/README.txt"
-  content = "Contains the temporary files"
-}
-
 
 ## Alarm and scale policy
 
@@ -265,11 +230,12 @@ resource "aws_autoscaling_policy" "policy_scale_up" {
 
 resource "aws_cloudwatch_metric_alarm" "cpu_alarm_scale_up" {
   alarm_name          = "${var.environment}-ecs-${local.ecs_group_node}-cpu-alarm-scale-up"
+  alarm_description   = "This metric monitors EC2 node '${local.ecs_group_node}' of ${var.ecs_cluster_name} ECS cluster when scale up on cpu utilization."
   comparison_operator = "GreaterThanOrEqualToThreshold" 
   evaluation_periods  = var.alarm_cpu_scale_up_evaluation_periods
   metric_name         = "CPUUtilization"
   namespace           = "AWS/EC2"
-  period              = 300
+  period              = var.alarm_cpu_scale_up_period
   statistic           = "Average"
   threshold           = var.alarm_cpu_scale_up_threshold
 
@@ -284,17 +250,18 @@ resource "aws_cloudwatch_metric_alarm" "cpu_alarm_scale_up" {
 
   tags = {
     Environment = var.environment
-    ECSGroup    = var.ecs_group_node
+    EcsGroupNode   = var.ecs_group_node
   }
 }
 
 resource "aws_cloudwatch_metric_alarm" "memory_alarm_scale_up" {
   alarm_name          = "${var.environment}-ecs-${local.ecs_group_node}-memory-alarm-scale-up"
+  alarm_description   = "This metric monitors EC2 node '${local.ecs_group_node}' of ${var.ecs_cluster_name} ECS cluster when scale up on memory utilization."
   comparison_operator = "GreaterThanOrEqualToThreshold"
   evaluation_periods  = var.alarm_memory_scale_up_evaluation_periods
   metric_name         = "MemoryUtilization"
   namespace           = "AWS/EC2"
-  period              = 300
+  period              = var.alarm_memory_scale_up_period
   statistic           = "Average"
   threshold           = var.alarm_memory_scale_up_threshold
 
@@ -309,7 +276,7 @@ resource "aws_cloudwatch_metric_alarm" "memory_alarm_scale_up" {
 
   tags = {
     Environment = var.environment
-    ECSGroup    = var.ecs_group_node
+    EcsGroupNode   = var.ecs_group_node
   }
 }
 
@@ -323,13 +290,14 @@ resource "aws_autoscaling_policy" "policy_scale_down" {
   policy_type            = "SimpleScaling"
 }
 
-resource "aws_cloudwatch_metric_alarm" "memory_alarm_scaledown" {
+resource "aws_cloudwatch_metric_alarm" "memory_alarm_scale_down" {
   alarm_name          = "${var.environment}-ecs-${local.ecs_group_node}-memory-alarm-scale-down"
+  alarm_description   = "This metric monitors EC2 node '${local.ecs_group_node}' of ${var.ecs_cluster_name} ECS cluster when scale down on memory utilization."
   comparison_operator = "LessThanOrEqualToThreshold"
   evaluation_periods  = var.alarm_memory_scale_down_evaluation_periods
   metric_name         = "MemoryUtilization"
   namespace           = "AWS/EC2"
-  period              = 300
+  period              = var.alarm_memory_scale_down_period
   statistic           = "Average"
   threshold           = var.alarm_memory_scale_down_threshold
 
@@ -344,17 +312,18 @@ resource "aws_cloudwatch_metric_alarm" "memory_alarm_scaledown" {
 
   tags = {
     Environment = var.environment
-    ECSGroup    = var.ecs_group_node
+    EcsGroupNode   = var.ecs_group_node
   }
 }
 
-resource "aws_cloudwatch_metric_alarm" "cpu_alarm_scaledown" {
+resource "aws_cloudwatch_metric_alarm" "cpu_alarm_scale_down" {
   alarm_name          = "${var.environment}-ecs-${local.ecs_group_node}-cpu-alarm-scale-down"
+  alarm_description   = "This metric monitors EC2 node '${local.ecs_group_node}' of ${var.ecs_cluster_name} ECS cluster when scale up on cpu utilization"
   comparison_operator = "LessThanOrEqualToThreshold"
   evaluation_periods  = var.alarm_cpu_scale_down_evaluation_periods
   metric_name         = "CPUUtilization"
   namespace           = "AWS/EC2"
-  period              = 120
+  period              = var.alarm_cpu_scale_down_period
   statistic           = "Average"
   threshold           = var.alarm_cpu_scale_down_threshold
 
@@ -369,7 +338,7 @@ resource "aws_cloudwatch_metric_alarm" "cpu_alarm_scaledown" {
 
   tags = {
     Environment = var.environment
-    ECSGroup    = var.ecs_group_node
+    EcsGroupNode   = var.ecs_group_node
   }
 }
 
@@ -381,7 +350,7 @@ resource "aws_cloudwatch_log_group" "ecs_var_log_dmesg" {
   tags = {
     Name        = "${var.ecs_cluster_name}/node/${local.ecs_group_node}/var/log/dmesg"
     Environment = var.environment
-    ECSGroup    = var.ecs_group_node
+    EcsGroupNode   = var.ecs_group_node
   }
 
   retention_in_days = var.ecs_cloudwath_retention_in_days
@@ -393,7 +362,7 @@ resource "aws_cloudwatch_log_group" "ecs_var_log_messages" {
   tags = {
     Name        = "${var.ecs_cluster_name}/node/${local.ecs_group_node}/var/log/messages"
     Environment = var.environment
-    ECSGroup    = var.ecs_group_node
+    EcsGroupNode   = var.ecs_group_node
   }
 
   retention_in_days = var.ecs_cloudwath_retention_in_days
@@ -405,7 +374,7 @@ resource "aws_cloudwatch_log_group" "ecs_var_log_ecs_ecs_init_log" {
   tags = {
     Name        = "${var.ecs_cluster_name}/node/${local.ecs_group_node}/var/log/ecs/ecs-init.log"
     Environment = var.environment
-    ECSGroup    = var.ecs_group_node
+    EcsGroupNode   = var.ecs_group_node
   }
 
   retention_in_days = var.ecs_cloudwath_retention_in_days
@@ -417,7 +386,7 @@ resource "aws_cloudwatch_log_group" "ecs_var_log_ecs_ecs_agent_log" {
   tags = {
     Name        = "${var.ecs_cluster_name}/node/${local.ecs_group_node}/var/log/ecs/ecs-agent.log"
     Environment = var.environment
-    ECSGroup    = var.ecs_group_node
+    EcsGroupNode   = var.ecs_group_node
   }
 
   retention_in_days = var.ecs_cloudwath_retention_in_days
@@ -429,7 +398,7 @@ resource "aws_cloudwatch_log_group" "ecs_var_log_ecs_audit_log" {
   tags = {
     Name        = "${var.ecs_cluster_name}/node/${local.ecs_group_node}/var/log/ecs/audit.log"
     Environment = var.environment
-    ECSGroup    = var.ecs_group_node
+    EcsGroupNode   = var.ecs_group_node
   }
 
   retention_in_days = var.ecs_cloudwath_retention_in_days
