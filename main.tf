@@ -72,7 +72,7 @@ data "template_file" "user_data_tpl" {
     ecs_enable_task_eni=var.ecs_enable_task_eni
     ecs_http_proxy=local.ecs_http_proxy
     ecs_no_proxy=local.ecs_no_proxy
-    esc_cni_plugins_path=var.esc_cni_plugins_path
+    ecs_cni_plugins_path=var.ecs_cni_plugins_path
     ecs_disable_docker_health_check=var.ecs_disable_docker_health_check
 
     user_data_option_efs = var.efs_volume == "" ? "" : data.template_file.user_data_efs_option_tpl.rendered
@@ -109,21 +109,24 @@ locals {
 # resources
 #----------------------
 
-# launch configuration 
-resource "aws_launch_configuration" "this" {
-  name                 = "${var.environment}-ecs-node-${local.ecs_group_node}-lc"
-  security_groups      = var.instance_security_groups
-  key_name             = var.key_name
-  image_id             = local.aws_ami
-  user_data            = local.user_data_aws
-  instance_type        = var.instance_type
-  iam_instance_profile = aws_iam_instance_profile.this.name
-  associate_public_ip_address = false
-
+# launch template
+resource "aws_launch_template" "this" {
+  name                    = "${var.environment}-ecs-node-${local.ecs_group_node}-lt"
+  image_id                = local.aws_ami
+  description             = "Launch template for EC2 node '${local.ecs_group_node}' of ${var.ecs_cluster_name} ECS cluster."
+  vpc_security_group_ids  = var.instance_security_groups
+  user_data               = local.user_data_aws
+  instance_type           = var.instance_type
   lifecycle {
     create_before_destroy = true
   }
-}
+  tags {
+    Name = "${var.environment}-ecs-node-${local.ecs_group_node}-lt"
+    Environment = var.environment
+    ECSGroup = ecs_group_node
+  }
+} 
+
 
 # auto scaling group
 resource "aws_autoscaling_group" "this" {
@@ -133,7 +136,10 @@ resource "aws_autoscaling_group" "this" {
   max_size                  = var.asg_max
   desired_capacity          = var.asg_desired
   health_check_grace_period = var.asg_health_period
-  launch_configuration      = aws_launch_configuration.this.name
+  launch_template {
+    id      = "${aws_launch_template.this.id}"
+    version = "$Latest"
+  }
 
   tag {
     key                 = "Name"

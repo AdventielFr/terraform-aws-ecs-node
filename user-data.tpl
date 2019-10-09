@@ -33,7 +33,6 @@ echo ECS_DISABLE_DOCKER_HEALTH_CHECK=${ecs_disable_docker_health_check} >> /etc/
 ${ecs_http_proxy}
 ${ecs_no_proxy}
 
-
 # Inject the CloudWatch Logs configuration file contents
 cat > /etc/awslogs/awslogs.conf <<- EOF
 [general]

@@ -129,12 +129,6 @@ variable "ecs_enable_task_iam_role_network_host" {
   type        = bool
 }
 
-variable "ecs_enable_task_iam_role" {
-  description = "Enables IAM roles for tasks for containers with the bridge and default network modes."
-  default     = false
-  type        = bool
-}
-
 variable "ecs_disable_image_cleanup" {
   description = "Whether to disable automated image cleanup for the Amazon ECS agent. For more information."
   default     = false
@@ -157,12 +151,6 @@ variable "ecs_num_images_delete_per_cycle" {
   description = "The maximum number of images to delete in a single automated image cleanup cycle. If set to less than 1, the value is ignored."
   default     = 5
   type        = number
-}
-
-variable "ecs_enable_container_metadata" {
-  description = "When true, the agent creates a file describing the container's metadata. The file can be located and consumed by using the container environment variable $ECS_CONTAINER_METADATA_FILE."
-  default     = true
-  type        = bool
 }
 
 variable "ecs_enable_container_metadata" {
