@@ -145,7 +145,7 @@ variable "ecs_image_cleanup_interval" {
   description = "The time interval between automated image cleanup cycles. If set to less than 10 minutes, the value is ignored."
   default     = "30m"
   type        = string
-
+}
 
 variable "ecs_image_minimum_cleanup_age" {
   description = "The minimum time interval between when an image is pulled and when it can be considered for automated image cleanup."
@@ -297,13 +297,13 @@ variable "alarm_memory_scale_down_evaluation_periods" {
   type        = number
 }
 
-variable "alarm_scale_up_scaling_adjustment"{
+variable "alarm_scale_up_scaling_adjustment" {
   description = "For Alarms scale up, the number of instances by which to scale. adjustment_type determines the interpretation of this number (e.g., as an absolute number or as a percentage of the existing Auto Scaling group size). A positive increment adds to the current capacity and a negative value removes from the current capacity"
   default     = 1
   type        = number
 }
 
-variable "alarm_scale_down_scaling_adjustment"{
+variable "alarm_scale_down_scaling_adjustment" {
   description = "For Alarms scale down, the number of instances by which to scale. adjustment_type determines the interpretation of this number (e.g., as an absolute number or as a percentage of the existing Auto Scaling group size). A positive increment adds to the current capacity and a negative value removes from the current capacity."
   default     = -1
   type        = number
