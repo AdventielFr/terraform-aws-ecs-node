@@ -243,7 +243,7 @@ variable "alarm_memory_scale_up_period" {
   default     = 180
 }
 
-variable "alarm_memoryscale_down_period" {
+variable "alarm_memory_scale_down_period" {
   description = "The memory period of the instance group that triggers an increase in the number of instances in the instance group"
   type        = number
   default     = 180
