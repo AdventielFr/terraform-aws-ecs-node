@@ -156,7 +156,7 @@ Name : **{{environment}}**-ecs-service-**{{ecs_group_node}}**-role
 | asg\_max | The maximum numbers of instances in the auto scaling group. | number | 1 |
 | asg\_min | The minimum numbers of instances in the auto scaling group. | number | 1 |
 | aws\_region | The AWS region to deploy | string | n/a |
-| cloudwatch\_agent\_config\_file |  | string | "" |
+| cloudwatch\_agent\_config\_content | The content of cloudwatch agent configuration. if empty the cloudwatch agent if not installed. | string | "" |
 | ecs\_agent\_loglevel | The level to log at on stdout for esc agent. | string | "info" |
 | ecs\_apparmor\_capable | Whether AppArmor is available on the container instance. | bool | false |
 | ecs\_cloudwath\_retention\_in\_days | The Cloudwath retention days for all Cloudwath LogGroup created. | number | 7 |
