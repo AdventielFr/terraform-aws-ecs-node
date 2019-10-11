@@ -109,7 +109,6 @@ locals {
   ecs_http_proxy      = var.ecs_http_proxy != "" ? "echo HTTP_PROXY=${var.ecs_http_proxy} >> /etc/ecs/ecs.config" : ""
   ecs_no_proxy        = var.ecs_no_proxy != "" ? "echo NO_PROXY=${var.ecs_no_proxy} >> /etc/ecs/ecs.config" : ""
   time_between_two_restart_ecs_demon = var.time_between_two_restart_ecs_demon<0 ? 360 : var.time_between_two_restart_ecs_demon
-  cloudwatch_agent    = var.cloudwatch_agent_config_file == "" ? false: true
 }
 
 #----------------------

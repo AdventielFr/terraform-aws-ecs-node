@@ -333,7 +333,8 @@ variable "time_between_two_restart_ecs_demon" {
   default = 360
 }
 
-variable "cloudwatch_agent_config_file" {
+variable "cloudwatch_agent_config_content" {
+  description = "The content of cloudwatch agent configuration. if empty the cloudwatch agent if not installed."
   type = string
   default = ""
 }
