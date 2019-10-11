@@ -46,6 +46,15 @@ data "template_file" "user_data_efs_option_tpl" {
   }
 }
 
+data "template_file" "user_data_cloudwath_agent_option_tpl" {
+  template = "${file("${path.module}/user-data-opt-cloudwatch-agent.tpl")}"
+
+  vars = {
+    region = var.aws_region
+    cloudwatch_agent_config_content = var.cloudwatch_agent_config_content 
+  }
+}
+
 data "template_file" "user_data_tpl" {
   template = "${file("${path.module}/user-data.tpl")}"
 
@@ -75,7 +84,9 @@ data "template_file" "user_data_tpl" {
     ecs_no_proxy=local.ecs_no_proxy
     ecs_cni_plugins_path=var.ecs_cni_plugins_path
     ecs_disable_docker_health_check=var.ecs_disable_docker_health_check
+    cron_ecs_restart = "*/${time_between_two_restart_ecs_demon} * * * *"
     user_data_option_efs = var.efs_volume == "" ? "" : data.template_file.user_data_efs_option_tpl.rendered
+    user_data_option_cloudwatch_agent = var.cloudwatch_agent_config_content == "" ? data.template_file.user_data_cloudwath_agent_option_tpl.rendered: ""
   }
 }
 
@@ -97,6 +108,8 @@ locals {
   ecs_group_node      = var.ecs_group_node == "" ? "default": var.ecs_group_node
   ecs_http_proxy      = var.ecs_http_proxy != "" ? "echo HTTP_PROXY=${var.ecs_http_proxy} >> /etc/ecs/ecs.config" : ""
   ecs_no_proxy        = var.ecs_no_proxy != "" ? "echo NO_PROXY=${var.ecs_no_proxy} >> /etc/ecs/ecs.config" : ""
+  time_between_two_restart_ecs_demon = var.time_between_two_restart_ecs_demon<0 ? 360 : var.time_between_two_restart_ecs_demon
+  cloudwatch_agent    = var.cloudwatch_agent_config_file == "" ? false: true
 }
 
 #----------------------
@@ -112,11 +125,6 @@ resource "aws_launch_template" "this" {
   user_data               = base64encode(local.user_data_aws)
   instance_type           = var.instance_type
   key_name                = var.key_name
-  
-  #network_interfaces {
-  #  associate_public_ip_address = false
-  #  security_groups = var.instance_security_groups
-  #}
 
   iam_instance_profile {
     name = aws_iam_instance_profile.this.name
@@ -182,6 +190,12 @@ resource "aws_iam_role_policy_attachment" "ecs_node_role_attachment_1" {
 resource "aws_iam_role_policy_attachment" "ecs_node_role_attachment_2" {
     role       = "${aws_iam_role.node_role.name}"
     policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonEC2ContainerServiceforEC2Role"
+}
+
+resource "aws_iam_role_policy_attachment" "ecs_node_role_attachment_3" {
+    count = var.cloudwatch_agent_config_content != "" ? 1: 0
+    role       = "${aws_iam_role.node_role.name}"
+    policy_arn = "arn:aws:iam::aws:policy/CloudWatchAgentServerPolicy"
 }
 
 resource "aws_iam_role_policy" "ecs_instance" {

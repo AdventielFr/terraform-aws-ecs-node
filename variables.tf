@@ -326,3 +326,15 @@ variable "efs_mount_point" {
   type = "string"
   default ="/mnt/efs"
 }
+
+variable "time_between_two_restart_ecs_demon" {
+  description = "Number of minutes between restarting the ecs daemon for sts management."
+  type = number
+  default = 360
+}
+
+variable "cloudwatch_agent_config_file" {
+  type = string
+  default = ""
+}
+

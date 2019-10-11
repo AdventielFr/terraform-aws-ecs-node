@@ -72,6 +72,16 @@ EOF
 --==BOUNDARY==
 Content-Type: text/x-shellscript; charset="us-ascii"
 #!/usr/bin/env bash
+cat > /etc/logrotate.d/ecs-init <<- 'EOF'
+/var/log/ecs/ecs-init.log* {
+    rotate 24
+    daily
+}
+EOF
+
+--==BOUNDARY==
+Content-Type: text/x-shellscript; charset="us-ascii"
+#!/usr/bin/env bash
 # Write the awslogs bootstrap script to /usr/local/bin/bootstrap-awslogs.sh
 cat > /usr/local/bin/bootstrap-awslogs.sh <<- 'EOF'
 #!/usr/bin/env bash
@@ -138,4 +148,15 @@ systemctl daemon-reload
 systemctl enable amazon-ssm-agent
 systemctl start amazon-ssm-agent
 
+--==BOUNDARY==
+Content-Type: text/x-shellscript; charset="us-ascii"
+#!/bin/sh
+#write out current crontab
+crontab -l > ecs_restart
+#echo new cron into cron file
+echo "${cron_ecs_restart} systemctl restart ecs" >> ecs_restart
+#install ecs_restart file
+crontab ecs_restart
+
 ${user_data_option_efs}
+${user_data_option_cloudwatch_agent}

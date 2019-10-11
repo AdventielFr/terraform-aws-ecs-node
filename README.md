@@ -142,11 +142,11 @@ Name : **{{environment}}**-ecs-service-**{{ecs_group_node}}**-role
 | alarm\_cpu\_scale\_up\_period | The CPU period of the instance group that triggers an increase in the number of instances in the instance group | number | 180 |
 | alarm\_cpu\_scale\_up\_threshold | The CPU consumption threshold of the instance group that triggers an increase in the number of instances in the instance group | number | 90 |
 | alarm\_memory\_scale\_down\_evaluation\_periods | The number of periods over which data is compared to the specified threshold for Alarm memory scale down | number | 2 |
+| alarm\_memory\_scale\_down\_period | The memory period of the instance group that triggers an increase in the number of instances in the instance group | number | 180 |
 | alarm\_memory\_scale\_down\_threshold | The memory consumption threshold of the instance group that triggers the reduction of the number of instances in the instance group | number | 10 |
 | alarm\_memory\_scale\_up\_evaluation\_periods | The number of periods over which data is compared to the specified threshold for Alarm memory scale up | number | 2 |
 | alarm\_memory\_scale\_up\_period | The memory period of the instance group that triggers an increase in the number of instances in the instance group | number | 180 |
 | alarm\_memory\_scale\_up\_threshold | The memory consumption threshold of the instance group that triggers an increase in the number of instances in the instance group | number | 90 |
-| alarm\_memoryscale\_down\_period | The memory period of the instance group that triggers an increase in the number of instances in the instance group | number | 180 |
 | alarm\_policy\_scale\_down\_cool\_down | For scale down, the amount of time, in seconds, after a scaling activity completes and before the next scaling activity can start. | number | 300 |
 | alarm\_policy\_scale\_up\_cool\_down | For scale up, the amount of time, in seconds, after a scaling activity completes and before the next scaling activity can start. | number | 300 |
 | alarm\_scale\_down\_scaling\_adjustment | For Alarms scale down, the number of instances by which to scale. adjustment\_type determines the interpretation of this number (e.g., as an absolute number or as a percentage of the existing Auto Scaling group size). A positive increment adds to the current capacity and a negative value removes from the current capacity. | number | -1 |
@@ -156,13 +156,14 @@ Name : **{{environment}}**-ecs-service-**{{ecs_group_node}}**-role
 | asg\_max | The maximum numbers of instances in the auto scaling group. | number | 1 |
 | asg\_min | The minimum numbers of instances in the auto scaling group. | number | 1 |
 | aws\_region | The AWS region to deploy | string | n/a |
+| cloudwatch\_agent\_config\_file |  | string | "" |
 | ecs\_agent\_loglevel | The level to log at on stdout for esc agent. | string | "info" |
 | ecs\_apparmor\_capable | Whether AppArmor is available on the container instance. | bool | false |
 | ecs\_cloudwath\_retention\_in\_days | The Cloudwath retention days for all Cloudwath LogGroup created. | number | 7 |
 | ecs\_cluster\_name | The name of the ECS cluster. | string | n/a |
 | ecs\_cni\_plugins\_path | The path where the cni binary file is located. | string | "/amazon-ecs-cni-plugins" |
 | ecs\_container\_start\_timeout | Time duration to wait before giving up on starting a container. | string | "3m" |
-| ecs\_container\_stop\_timeout | Time duration to wait from when a task is stopped before its containers are forcefully killed if they do not exit normally on their own. | string | "3Os" |
+| ecs\_container\_stop\_timeout | Time duration to wait from when a task is stopped before its containers are forcefully killed if they do not exit normally on their own. | string | "30s" |
 | ecs\_disable\_docker\_health\_check | Whether to disable the Docker container health check for the ECS Agent. | bool | false |
 | ecs\_disable\_image\_cleanup | Whether to disable automated image cleanup for the Amazon ECS agent. For more information. | bool | false |
 | ecs\_disable\_privileged | Whether launching privileged containers is disabled on the container instance. If this value is set to true, privileged containers are not permitted. | bool | false |
@@ -188,6 +189,7 @@ Name : **{{environment}}**-ecs-service-**{{ecs_group_node}}**-role
 | instance\_type | Default AWS instance type. | string | "t2.small" |
 | key\_name | The name of AWS key pair | string | "" |
 | subnets | The subnets where the instances will be deployed to. | list(string) | n/a |
+| time\_between\_two\_restart\_ecs\_demon | Number of minutes between restarting the ecs daemon for sts management. | number | 360 |
 | user\_data | The override the module embedded user data script. | string | "" |
 | vpc\_cidr | The CIDR for the VPC. | string | n/a |
 | vpc\_id | The ID of the VPC. | string | n/a |
