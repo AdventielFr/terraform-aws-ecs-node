@@ -86,7 +86,7 @@ data "template_file" "user_data_tpl" {
     ecs_disable_docker_health_check=var.ecs_disable_docker_health_check
     cron_ecs_restart = "*/${var.time_between_two_restart_ecs_demon} * * * *"
     user_data_option_efs = var.efs_volume == "" ? "" : data.template_file.user_data_efs_option_tpl.rendered
-    user_data_option_cloudwatch_agent = var.cloudwatch_agent_config_content == "" ? data.template_file.user_data_cloudwath_agent_option_tpl.rendered: ""
+    user_data_option_cloudwatch_agent = local.cloudwatch_agent_config_content
   }
 }
 
@@ -108,7 +108,8 @@ locals {
   ecs_group_node      = var.ecs_group_node == "" ? "default": var.ecs_group_node
   ecs_http_proxy      = var.ecs_http_proxy != "" ? "echo HTTP_PROXY=${var.ecs_http_proxy} >> /etc/ecs/ecs.config" : ""
   ecs_no_proxy        = var.ecs_no_proxy != "" ? "echo NO_PROXY=${var.ecs_no_proxy} >> /etc/ecs/ecs.config" : ""
-  time_between_two_restart_ecs_demon = var.time_between_two_restart_ecs_demon<0 ? 360 : var.time_between_two_restart_ecs_demon
+  time_between_two_restart_ecs_demon = var.time_between_two_restart_ecs_demon <0 ? 360 : var.time_between_two_restart_ecs_demon
+  cloudwatch_agent_config_content = var.cloudwatch_agent_config_content != "" ? data.template_file.user_data_cloudwath_agent_option_tpl.rendered: ""
 }
 
 #----------------------
