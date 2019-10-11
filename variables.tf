@@ -149,7 +149,7 @@ variable "ecs_container_start_timeout" {
 
 variable "ecs_container_stop_timeout" {
   description = "Time duration to wait from when a task is stopped before its containers are forcefully killed if they do not exit normally on their own."
-  default     = "3Os"
+  default     = "30s"
   type        = string
 }
 

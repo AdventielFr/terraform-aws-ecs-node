@@ -69,7 +69,7 @@ data "template_file" "user_data_tpl" {
     ecs_disable_privileged=var.ecs_disable_privileged
     ecs_selinux_capable=var.ecs_selinux_capable
     ecs_apparmor_capable=var.ecs_selinux_capable
-    ecs_engine_task_cleanup_wait_duration=var.ecs_selinux_capable
+    ecs_engine_task_cleanup_wait_duration=var.ecs_engine_task_cleanup_wait_duration
     ecs_enable_task_eni=var.ecs_enable_task_eni
     ecs_http_proxy=local.ecs_http_proxy
     ecs_no_proxy=local.ecs_no_proxy
