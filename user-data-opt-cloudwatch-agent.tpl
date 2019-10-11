@@ -3,10 +3,7 @@ Content-Type: text/x-shellscript; charset="us-ascii"
 #!/usr/bin/env bash
 
 # download cloudwatch-agent
-wget https://s3.${region}.amazonaws.com/amazoncloudwatch-agent-${region}/amazon_linux/amd64/latest/amazon-cloudwatch-agent.rpm
-
-# install cloudwatch-agent
-rpm -U ./amazon-cloudwatch-agent.rpm
+yum install -y https://s3.${region}.amazonaws.com/amazoncloudwatch-agent-${region}/amazon_linux/amd64/latest/amazon-cloudwatch-agent.rpm
 
 # create cloudwatch agent configuration file
 cat > /opt/aws/amazon-cloudwatch-agent/etc/amazon-cloudwatch-agent.json <<- EOF
