@@ -346,15 +346,19 @@ variable "cloudwatch_agent_metrics_collection_interval" {
 }
 
 variable "cloudwatch_agent_metrics_disk_resources" {
-  description  = "Specifies an array of disk mount points. This field limits CloudWatch to collect metrics from only the listed mount points. You can specify * as the value to collect metrics from all mount points. Defaults to the root / mountpount."
-  type = list(string)
-  default = [
-    "/"
-  ]
+  description = "Specifies an array of disk mount points. This field limits CloudWatch to collect metrics from only the listed mount points. You can specify * as the value to collect metrics from all mount points. Defaults to the root / mountpount."
+  type        = "list"
+  default     = ["/"]
+}
+
+variable "cloudwatch_agent_metrics_cpu_resources" {
+  description = "Specifies that per-cpu metrics are to be collected. The only allowed value is *. If you include this field and value, per-cpu metrics are collected."
+  type        = "string"
+  default     = "\"resources\": [\"*\"],"
 }
 
 variable "cloudwatch_agent_metrics_config" {
-  description  = "Which metrics should we send to cloudwatch, the default is standard. Setting this variable to advanced will send all the available metrics that are provided by the agent. You can find more information here https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/create-cloudwatch-agent-configuration-file-wizard.html."
+  description  = "Which metrics should we send to cloudwatch, the default is empty. If the value is empty then  clouwatch agent is not installed .Setting this variable to advanced will send all the available metrics that are provided by the agent. You can find more information here https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/create-cloudwatch-agent-configuration-file-wizard.html. The valids values are  : empty / standard / advanced."
   type = string
   default = ""
 }
