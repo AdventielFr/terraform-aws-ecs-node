@@ -55,17 +55,6 @@ data "template_file" "user_data_cloudwath_agent_option_tpl" {
   }
 }
 
-data "template_file" "cloudwatch_agent_configuration_minimal_tpl" {
-  template = "${file("${path.module}/templates/cloudwatch_agent_configuration_minimal.tpl")}"
-
-  vars = {
-    metrics_collection_interval = var.cloudwatch_agent_metrics_collection_interval
-    disk_resources = jsonencode(var.cloudwatch_agent_metrics_disk_resources)
-    cpu_resources = var.cloudwatch_agent_metrics_cpu_resources
- }
-
-}
-
 data "template_file" "cloudwatch_agent_configuration_standard_tpl" {
   template = "${file("${path.module}/templates/cloudwatch_agent_configuration_standard.tpl")}"
 
