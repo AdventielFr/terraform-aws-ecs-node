@@ -333,15 +333,29 @@ variable "time_between_two_restart_ecs_demon" {
   default = 6
 }
 
-variable "cloudwatch_agent_config_content" {
-  description = "The content of cloudwatch agent configuration. if empty the cloudwatch agent if not installed."
-  type = string
-  default = ""
-}
-
 variable "enable_monitoring" {
   description = "If true, the launched EC2 instance cluster node will have detailed monitoring enabled."
   type = bool
   default = true
+}
+
+variable "cloudwatch_agent_metrics_collection_interval" {
+  description  = "Specifies how often to collect the cpu metrics, overriding the global metrics_collection_interval specified in the agent section of the configuration file. If you set this value below 60 seconds, each metric is collected as a high-resolution metric."
+  type = number
+  default = 60
+}
+
+variable "cloudwatch_agent_metrics_disk_resources" {
+  description  = "Specifies an array of disk mount points. This field limits CloudWatch to collect metrics from only the listed mount points. You can specify * as the value to collect metrics from all mount points. Defaults to the root / mountpount."
+  type = list(string)
+  default = [
+    "/"
+  ]
+}
+
+variable "cloudwatch_agent_metrics_config" {
+  description  = "Which metrics should we send to cloudwatch, the default is standard. Setting this variable to advanced will send all the available metrics that are provided by the agent. You can find more information here https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/create-cloudwatch-agent-configuration-file-wizard.html."
+  type = string
+  default = ""
 }
 

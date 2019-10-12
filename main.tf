@@ -38,7 +38,7 @@ data "aws_iam_policy_document" "node_role" {
 }
 
 data "template_file" "user_data_efs_option_tpl" {
-  template = "${file("${path.module}/user-data-opt-efs.tpl")}"
+  template = "${file("${path.module}/templates/user-data-opt-efs.tpl")}"
 
   vars = {
     efs_mount_point = var.efs_mount_point
@@ -47,7 +47,7 @@ data "template_file" "user_data_efs_option_tpl" {
 }
 
 data "template_file" "user_data_cloudwath_agent_option_tpl" {
-  template = "${file("${path.module}/user-data-opt-cloudwatch-agent.tpl")}"
+  template = "${file("${path.module}/templates/user-data-opt-cloudwatch-agent.tpl")}"
 
   vars = {
     region = var.aws_region
@@ -55,8 +55,26 @@ data "template_file" "user_data_cloudwath_agent_option_tpl" {
   }
 }
 
+data "template_file" "cloudwatch_agent_configuration_standard_tpl" {
+  template = "${file("${path.module}/templates/cloudwatch_agent_configuration_standard.tpl")}"
+
+  vars = {
+    metrics_collection_interval = var.cloudwatch_agent_metrics_collection_interval
+    disk_resources = var.cloudwatch_agent_metrics_disk_resources
+ }
+}
+
+data "template_file" "cloudwatch_agent_configuration_advanced_tpl" {
+  template = "${file("${path.module}/templates/cloudwatch_agent_configuration_advanced.tpl")}"
+
+  vars = {
+    metrics_collection_interval = var.cloudwatch_agent_metrics_collection_interval
+    disk_resources = var.cloudwatch_agent_metrics_disk_resources
+  }
+}
+
 data "template_file" "user_data_tpl" {
-  template = "${file("${path.module}/user-data.tpl")}"
+  template = "${file("${path.module}/templates/user-data.tpl")}"
 
   vars = {
     environment = var.environment
@@ -85,8 +103,8 @@ data "template_file" "user_data_tpl" {
     ecs_cni_plugins_path=var.ecs_cni_plugins_path
     ecs_disable_docker_health_check=var.ecs_disable_docker_health_check
     cron_ecs_restart = "* */${var.time_between_two_restart_ecs_demon} * * *"
-    user_data_option_efs = var.efs_volume == "" ? "" : data.template_file.user_data_efs_option_tpl.rendered
-    user_data_option_cloudwatch_agent = local.cloudwatch_agent_config_content
+    user_data_option_efs = local.user_data_option_efs
+    user_data_option_cloudwatch_agent = local.user_data_option_cloudwatch_agent
   }
 }
 
@@ -109,7 +127,9 @@ locals {
   ecs_http_proxy      = var.ecs_http_proxy != "" ? "echo HTTP_PROXY=${var.ecs_http_proxy} >> /etc/ecs/ecs.config" : ""
   ecs_no_proxy        = var.ecs_no_proxy != "" ? "echo NO_PROXY=${var.ecs_no_proxy} >> /etc/ecs/ecs.config" : ""
   time_between_two_restart_ecs_demon = var.time_between_two_restart_ecs_demon <0 ? 360 : var.time_between_two_restart_ecs_demon
-  cloudwatch_agent_config_content = var.cloudwatch_agent_config_content != "" ? data.template_file.user_data_cloudwath_agent_option_tpl.rendered: ""
+  cloudwatch_agent_config_content = var.cloudwatch_agent_metrics_config == "" ? "": ( var.cloudwatch_agent_metrics_config =="advanced" ? data.template_file.cloudwatch_agent_configuration_advanced_tpl.rendered:data.template_file.cloudwatch_agent_configuration_standard_tpl.rendered)
+  user_data_option_efs  =v ar.efs_volume == "" ? "" : data.template_file.user_data_efs_option_tpl.rendered
+  user_data_option_cloudwatch_agent = cloudwatch_agent_config_content == "" ? "" : data.template_file.user_data_cloudwath_agent_option_tpl.rendered
 }
 
 #----------------------
@@ -193,7 +213,7 @@ resource "aws_iam_role_policy_attachment" "ecs_node_role_attachment_2" {
 }
 
 resource "aws_iam_role_policy_attachment" "ecs_node_role_attachment_3" {
-    count = var.cloudwatch_agent_config_content != "" ? 1: 0
+    count = var.cloudwatch_agent_config != "" ? 1: 0
     role       = "${aws_iam_role.node_role.name}"
     policy_arn = "arn:aws:iam::aws:policy/CloudWatchAgentServerPolicy"
 }
