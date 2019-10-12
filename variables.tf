@@ -328,14 +328,20 @@ variable "efs_mount_point" {
 }
 
 variable "time_between_two_restart_ecs_demon" {
-  description = "Number of minutes between restarting the ecs daemon for sts management."
+  description = "Number of hours between restarting the ecs daemon for sts management."
   type = number
-  default = 360
+  default = 6
 }
 
 variable "cloudwatch_agent_config_content" {
   description = "The content of cloudwatch agent configuration. if empty the cloudwatch agent if not installed."
   type = string
   default = ""
+}
+
+variable "enable_monitoring" {
+  description = "If true, the launched EC2 instance cluster node will have detailed monitoring enabled."
+  type = bool
+  default = true
 }
 

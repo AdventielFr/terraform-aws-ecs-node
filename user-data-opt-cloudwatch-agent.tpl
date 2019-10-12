@@ -11,4 +11,4 @@ ${cloudwatch_agent_config_content}
 EOF
 
 # start cloudwatch-agent
-/opt/aws/amazon-cloudwatch-agent/bin/amazon-cloudwatch-agent-ctl -a start -m ec2 -c /opt/aws/amazon-cloudwatch-agent/etc/amazon-cloudwatch-agent.json 
+/opt/aws/amazon-cloudwatch-agent/bin/amazon-cloudwatch-agent-ctl -a fetch-config -m ec2 -c file:/opt/aws/amazon-cloudwatch-agent/etc/amazon-cloudwatch-agent.json -s

@@ -184,12 +184,13 @@ Name : **{{environment}}**-ecs-service-**{{ecs_group_node}}**-role
 | ecs\_selinux\_capable | Whether SELinux is available on the container instance. | bool | false |
 | efs\_mount\_point | The EFS volume mount point for EC2 instances. | "string" | "/mnt/efs" |
 | efs\_volume | The EFS volume to attach to ec2 instances. ( ex : fs-05a856xx) | string | "" |
+| enable\_monitoring | If true, the launched EC2 instance cluster node will have detailed monitoring enabled. | bool | true |
 | environment | The logical name of the environment, will be used as prefix and in tags. | string | n/a |
 | instance\_security\_groups | The List of security group for ecs cluster node. | list(string) | n/a |
 | instance\_type | Default AWS instance type. | string | "t2.small" |
 | key\_name | The name of AWS key pair | string | "" |
 | subnets | The subnets where the instances will be deployed to. | list(string) | n/a |
-| time\_between\_two\_restart\_ecs\_demon | Number of minutes between restarting the ecs daemon for sts management. | number | 360 |
+| time\_between\_two\_restart\_ecs\_demon | Number of hours between restarting the ecs daemon for sts management. | number | 6 |
 | user\_data | The override the module embedded user data script. | string | "" |
 | vpc\_cidr | The CIDR for the VPC. | string | n/a |
 | vpc\_id | The ID of the VPC. | string | n/a |

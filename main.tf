@@ -84,7 +84,7 @@ data "template_file" "user_data_tpl" {
     ecs_no_proxy=local.ecs_no_proxy
     ecs_cni_plugins_path=var.ecs_cni_plugins_path
     ecs_disable_docker_health_check=var.ecs_disable_docker_health_check
-    cron_ecs_restart = "*/${var.time_between_two_restart_ecs_demon} * * * *"
+    cron_ecs_restart = "* $/${var.time_between_two_restart_ecs_demon} * * *"
     user_data_option_efs = var.efs_volume == "" ? "" : data.template_file.user_data_efs_option_tpl.rendered
     user_data_option_cloudwatch_agent = local.cloudwatch_agent_config_content
   }
@@ -150,7 +150,7 @@ resource "aws_launch_template" "this" {
   }
 
   monitoring {
-    enabled = true
+    enabled = var.enable_monitoring
   }
 
 } 
