@@ -358,7 +358,7 @@ variable "cloudwatch_agent_metrics_cpu_resources" {
 }
 
 variable "cloudwatch_agent_metrics_config" {
-  description  = "Which metrics should we send to cloudwatch, the default is empty. If the value is empty then  clouwatch agent is not installed .Setting this variable to advanced will send all the available metrics that are provided by the agent. You can find more information here https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/create-cloudwatch-agent-configuration-file-wizard.html. The valids values are  : empty / standard / advanced."
+  description  = "Which metrics should we send to cloudwatch, the default is empty. If the value is empty then  clouwatch agent is not installed .Setting this variable to advanced will send all the available metrics that are provided by the agent. You can find more information here https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/create-cloudwatch-agent-configuration-file-wizard.html. The valids values are  : empty / minimal / standard / advanced."
   type = string
   default = ""
 }
