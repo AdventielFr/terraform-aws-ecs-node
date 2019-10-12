@@ -55,6 +55,18 @@ data "template_file" "user_data_cloudwath_agent_option_tpl" {
   }
 }
 
+data "template_file" "cloudwatch_agent_configuration_minimal_tpl" {
+  template = "${file("${path.module}/templates/cloudwatch_agent_configuration_minimal.tpl")}"
+
+  vars = {
+    metrics_collection_interval = var.cloudwatch_agent_metrics_collection_interval
+    disk_resources = jsonencode(var.cloudwatch_agent_metrics_disk_resources)
+    cpu_resources = var.cloudwatch_agent_metrics_cpu_resources
+ }
+
+}
+
+
 data "template_file" "cloudwatch_agent_configuration_standard_tpl" {
   template = "${file("${path.module}/templates/cloudwatch_agent_configuration_standard.tpl")}"
 
@@ -130,7 +142,7 @@ locals {
   ecs_http_proxy      = var.ecs_http_proxy != "" ? "echo HTTP_PROXY=${var.ecs_http_proxy} >> /etc/ecs/ecs.config" : ""
   ecs_no_proxy        = var.ecs_no_proxy != "" ? "echo NO_PROXY=${var.ecs_no_proxy} >> /etc/ecs/ecs.config" : ""
   time_between_two_restart_ecs_demon = var.time_between_two_restart_ecs_demon <0 ? 360 : var.time_between_two_restart_ecs_demon
-  cloudwatch_agent_config_content = var.cloudwatch_agent_metrics_config == "custom" ? var.cloudwatch_agent_metrics_custom_config_content : (var.cloudwatch_agent_metrics_config == "standard" ? data.template_file.cloudwatch_agent_configuration_standard_tpl.rendered : ( var.cloudwatch_agent_metrics_config == "advanced" ? data.template_file.cloudwatch_agent_configuration_advanced_tpl.rendered: ""))
+  cloudwatch_agent_config_content = var.cloudwatch_agent_metrics_config == "minimal" ? data.template_file.cloudwatch_agent_configuration_minimal_tpl.rendered : (var.cloudwatch_agent_metrics_config == "custom" ? var.cloudwatch_agent_metrics_custom_config_content : (var.cloudwatch_agent_metrics_config == "standard" ? data.template_file.cloudwatch_agent_configuration_standard_tpl.rendered : ( var.cloudwatch_agent_metrics_config == "advanced" ? data.template_file.cloudwatch_agent_configuration_advanced_tpl.rendered: "")))
   user_data_option_efs = var.efs_volume == "" ? "" : data.template_file.user_data_efs_option_tpl.rendered
   user_data_option_cloudwatch_agent = local.cloudwatch_agent_config_content == "" ? "" : data.template_file.user_data_cloudwath_agent_option_tpl.rendered
 }
