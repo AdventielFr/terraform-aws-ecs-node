@@ -10,6 +10,14 @@
       "AutoScalingGroupName": "\$${aws:AutoScalingGroupName}"
     },
     "metrics_collected": {
+      "cpu": {
+        "measurement": [
+          "cpu_usage_idle"
+        ],
+        "metrics_collection_interval": ${metrics_collection_interval},
+        ${cpu_resources}
+        "totalcpu": true
+      },
       "disk": {
         "measurement": [
           "used_percent"
