@@ -1,12 +1,13 @@
 {
+  "agent": {
+    "run_as_user": "cwagent"
+  },
   "metrics": {
-    "aggregation_dimensions": [
-      ["InstanceId"],
-      ["AutoScalingGroupName"]
-    ],
     "append_dimensions": {
-      "AutoScalingGroupName": "$${aws:AutoScalingGroupName}",
-      "InstanceId": "$${aws:InstanceId}"
+      "ImageId": "$${aws:ImageId}",
+      "InstanceId": "$${aws:InstanceId}",
+      "InstanceType": "$${aws:InstanceType}",
+      "AutoScalingGroupName": "$${aws:AutoScalingGroupName}"
     },
     "metrics_collected": {
       "cpu": {
