@@ -154,7 +154,7 @@ Content-Type: text/x-shellscript; charset="us-ascii"
 #write out current crontab
 crontab -l > ecs_restart
 #echo new cron into cron file
-echo "${cron_ecs_restart} systemctl restart ecs" >> ecs_restart
+echo "${cron_definition_restart_ecs_demon} * * * systemctl restart ecs" >> ecs_restart
 #install ecs_restart file
 crontab ecs_restart
 

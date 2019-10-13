@@ -327,10 +327,10 @@ variable "efs_mount_point" {
   default ="/mnt/efs"
 }
 
-variable "time_between_two_restart_ecs_demon" {
-  description = "Number of hours between restarting the ecs daemon for sts management."
-  type = number
-  default = 6
+variable "cron_definition_restart_ecs_demon" {
+  description = "The cron définition for restart ecs daemon for sts management(default every 6 hours)"
+  type = string
+  default = "0 */6 * * *"
 }
 
 variable "enable_monitoring" {

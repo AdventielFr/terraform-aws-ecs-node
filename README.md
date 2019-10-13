@@ -161,6 +161,7 @@ Name : **{{environment}}**-ecs-service-**{{ecs_group_node}}**-role
 | cloudwatch\_agent\_metrics\_cpu\_resources | Specifies that per-cpu metrics are to be collected. The only allowed value is *. If you include this field and value, per-cpu metrics are collected. | "string" | "\"resources\": \[\"*\"\]," |
 | cloudwatch\_agent\_metrics\_custom\_config\_content | The content of cloudwatch agent config if cloudwatch\_agent\_metrics\_config = custom | string | "" |
 | cloudwatch\_agent\_metrics\_disk\_resources | Specifies an array of disk mount points. This field limits CloudWatch to collect metrics from only the listed mount points. You can specify * as the value to collect metrics from all mount points. Defaults to the root / mountpount. | "list" | \["/"\] |
+| cron\_definition\_restart\_ecs\_demon | The cron définition for restart ecs daemon for sts management(default every 6 hours) | string | "0 */6 * * *" |
 | ecs\_agent\_loglevel | The level to log at on stdout for esc agent. | string | "info" |
 | ecs\_apparmor\_capable | Whether AppArmor is available on the container instance. | bool | false |
 | ecs\_cloudwath\_retention\_in\_days | The Cloudwath retention days for all Cloudwath LogGroup created. | number | 7 |
@@ -194,7 +195,6 @@ Name : **{{environment}}**-ecs-service-**{{ecs_group_node}}**-role
 | instance\_type | Default AWS instance type. | string | "t2.small" |
 | key\_name | The name of AWS key pair | string | "" |
 | subnets | The subnets where the instances will be deployed to. | list(string) | n/a |
-| time\_between\_two\_restart\_ecs\_demon | Number of hours between restarting the ecs daemon for sts management. | number | 6 |
 | user\_data | The override the module embedded user data script. | string | "" |
 | vpc\_cidr | The CIDR for the VPC. | string | n/a |
 | vpc\_id | The ID of the VPC. | string | n/a |
