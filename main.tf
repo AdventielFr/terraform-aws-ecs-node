@@ -472,7 +472,7 @@ resource "aws_cloudwatch_event_target" "this" {
   count     = local.enabled_cloudwatch_event_autoscaling != "" ? 1 : 0
   rule      = element(aws_cloudwatch_event_rule.this.*.name, 0)
   target_id = "SendToSNS"
-  arn       = var.sns_management_autoscaling_arn
+  arn       = var.cloudwatch_event_autoscaling_sns_arn
 }
 
 
