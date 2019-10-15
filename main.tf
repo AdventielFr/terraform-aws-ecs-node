@@ -152,7 +152,7 @@ locals {
   cloudwatch_agent_config_content      = var.cloudwatch_agent_metrics_config == "minimal" ? data.template_file.cloudwatch_agent_configuration_minimal_tpl.rendered : (var.cloudwatch_agent_metrics_config == "custom" ? var.cloudwatch_agent_metrics_custom_config_content : (var.cloudwatch_agent_metrics_config == "standard" ? data.template_file.cloudwatch_agent_configuration_standard_tpl.rendered : (var.cloudwatch_agent_metrics_config == "advanced" ? data.template_file.cloudwatch_agent_configuration_advanced_tpl.rendered : "")))
   user_data_option_efs                 = var.efs_volume == "" ? "" : data.template_file.user_data_efs_option_tpl.rendered
   user_data_option_cloudwatch_agent    = local.cloudwatch_agent_config_content == "" ? "" : data.template_file.user_data_cloudwath_agent_option_tpl.rendered
-  enabled_cloudwatch_event_autoscaling = cloudwatch_event_autoscaling_sns_arn != ""
+  enabled_cloudwatch_event_autoscaling = var.cloudwatch_event_autoscaling_sns_arn != ""
 }
 
 
