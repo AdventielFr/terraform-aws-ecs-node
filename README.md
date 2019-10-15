@@ -161,6 +161,7 @@ Name : **{{environment}}**-ecs-service-**{{ecs_group_node}}**-role
 | cloudwatch\_agent\_metrics\_cpu\_resources | Specifies that per-cpu metrics are to be collected. The only allowed value is *. If you include this field and value, per-cpu metrics are collected. | "string" | "\"resources\": \[\"*\"\]," |
 | cloudwatch\_agent\_metrics\_custom\_config\_content | The content of cloudwatch agent config if cloudwatch\_agent\_metrics\_config = custom | string | "" |
 | cloudwatch\_agent\_metrics\_disk\_resources | Specifies an array of disk mount points. This field limits CloudWatch to collect metrics from only the listed mount points. You can specify * as the value to collect metrics from all mount points. Defaults to the root / mountpount. | "list" | \["/"\] |
+| cloudwatch\_event\_topic\_arn | The ARN of the SNS topic that receives modification events from the autoscaling group. | string | "" |
 | cron\_definition\_restart\_ecs\_demon | The cron définition for restart ecs daemon for sts management(default every 6 hours) | string | "0 */6 * * *" |
 | ecs\_agent\_loglevel | The level to log at on stdout for esc agent. | string | "info" |
 | ecs\_apparmor\_capable | Whether AppArmor is available on the container instance. | bool | false |
