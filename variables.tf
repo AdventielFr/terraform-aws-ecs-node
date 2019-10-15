@@ -368,3 +368,9 @@ variable "cloudwatch_agent_metrics_custom_config_content" {
   type = string
   default = ""
 }
+
+variable "sns_management_autoscaling_arn" {
+  description  = "ARN TOPIC SNS EVENT autoscaling"
+  type = string
+  default = ""
+}

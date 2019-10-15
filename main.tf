@@ -77,6 +77,15 @@ data "template_file" "cloudwatch_agent_configuration_standard_tpl" {
 
 }
 
+data "template_file" "event_rules_autoscaling_tpl" {
+  template = "${file("${path.module}/templates/event_rules_autoscaling.tpl")}"
+
+  vars = {
+    name_autoscaling_group = "${aws_autoscaling_group.this.name}"
+ }
+
+}
+
 data "template_file" "cloudwatch_agent_configuration_advanced_tpl" {
   template = "${file("${path.module}/templates/cloudwatch_agent_configuration_advanced.tpl")}"
 
@@ -447,3 +456,22 @@ resource "aws_cloudwatch_log_group" "ecs_var_log_ecs_audit_log" {
 
   retention_in_days = var.ecs_cloudwath_retention_in_days
 }
+
+## CloudWatch Event Rules
+
+resource "aws_cloudwatch_event_rule" "this" {
+  count      = var.sns_management_autoscaling_arn != "" ? 1: 0
+  name        = "${var.environment}-capture-aws-scalin-instance"
+  description = "Capture add instance in autoscalingroup"
+  event_pattern = data.template_file.event_rules_autoscaling_tpl.rendered
+}
+
+
+resource "aws_cloudwatch_event_target" "this" {
+  count     = var.sns_management_autoscaling_arn != "" ? 1: 0
+  rule      = element(aws_cloudwatch_event_rule.this.*.name, 0)
+  target_id = "SendToSNS"
+  arn       = var.sns_management_autoscaling_arn
+}
+
+
