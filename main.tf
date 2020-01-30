@@ -208,7 +208,7 @@ resource "aws_autoscaling_group" "this" {
   desired_capacity          = var.asg_desired
   health_check_grace_period = var.asg_health_period
   launch_template {
-    id      = "${aws_launch_template.this.id}"
+    id      = aws_launch_template.this.id
     version = "$Latest"
   }
 }
