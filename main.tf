@@ -81,7 +81,7 @@ data "template_file" "cloudwatch_event_rules_autoscaling" {
   template = "${file("${path.module}/templates/cloudwatch_event_rules_autoscaling.tpl")}"
 
   vars = {
-    name_autoscaling_group = "${aws_autoscaling_group.this.name}"
+    name_autoscaling_group = aws_autoscaling_group.this.name
   }
 
 }
@@ -143,9 +143,9 @@ data "template_file" "service_role_policy_tpl" {
 # locals
 #----------------------
 locals {
-  aws_ami_userdefined                  = "${lookup(var.ecs_optimized_amis, var.aws_region, "")}"
-  aws_ami                              = "${local.aws_ami_userdefined == "" ? data.aws_ami.aws_optimized_ecs.id : local.aws_ami_userdefined}"
-  user_data_aws                        = "${var.user_data == "" ? data.template_file.user_data_tpl.rendered : var.user_data}"
+  aws_ami_userdefined                  = lookup(var.ecs_optimized_amis, var.aws_region, "")
+  aws_ami                              = local.aws_ami_userdefined == "" ? data.aws_ami.aws_optimized_ecs.id : local.aws_ami_userdefined
+  user_data_aws                        = var.user_data == "" ? data.template_file.user_data_tpl.rendered : var.user_data
   ecs_group_node                       = var.ecs_group_node == "" ? "default" : var.ecs_group_node
   ecs_http_proxy                       = var.ecs_http_proxy != "" ? "echo HTTP_PROXY=${var.ecs_http_proxy} >> /etc/ecs/ecs.config" : ""
   ecs_no_proxy                         = var.ecs_no_proxy != "" ? "echo NO_PROXY=${var.ecs_no_proxy} >> /etc/ecs/ecs.config" : ""
@@ -227,18 +227,18 @@ resource "aws_iam_role" "node_role" {
 }
 
 resource "aws_iam_role_policy_attachment" "ecs_node_role_attachment_1" {
-  role       = "${aws_iam_role.node_role.name}"
+  role       = aws_iam_role.node_role.name
   policy_arn = "arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore"
 }
 
 resource "aws_iam_role_policy_attachment" "ecs_node_role_attachment_2" {
-  role       = "${aws_iam_role.node_role.name}"
+  role       = aws_iam_role.node_role.name
   policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonEC2ContainerServiceforEC2Role"
 }
 
 resource "aws_iam_role_policy_attachment" "ecs_node_role_attachment_3" {
   count      = var.cloudwatch_agent_metrics_config != "" ? 1 : 0
-  role       = "${aws_iam_role.node_role.name}"
+  role       = aws_iam_role.node_role.name
   policy_arn = "arn:aws:iam::aws:policy/CloudWatchAgentServerPolicy"
 }
 

@@ -96,7 +96,7 @@ variable "ecs_cloudwath_retention_in_days" {
 variable "ecs_image_pull_behavior" {
   description = "The behavior used to customize the pull image process for your container instances."
   default     = "default"
-  type        = string  
+  type        = string
 }
 
 variable "ecs_enable_task_iam_role" {
@@ -174,49 +174,49 @@ variable "ecs_selinux_capable" {
 variable "ecs_apparmor_capable" {
   description = "Whether AppArmor is available on the container instance."
   default     = false
-  type        = bool  
+  type        = bool
 }
 
 variable "ecs_engine_task_cleanup_wait_duration" {
   description = "Time duration to wait from when a task is stopped until the Docker container is removed. As this removes the Docker container data, be aware that if this value is set too low, you may not be able to inspect your stopped containers or view the logs before they are removed. The minimum duration is 1m; any value shorter than 1 minute is ignored."
   default     = "3h"
-  type        = string  
+  type        = string
 }
 
 variable "ecs_http_proxy" {
   description = "The hostname (or IP address) and port number of an HTTP proxy to use for the ECS agent to connect to the internet (for example, if your container instances do not have external network access through an Amazon VPC internet gateway or NAT gateway or instance). If this variable is set, you must also set the NO_PROXY variable to filter EC2 instance metadata and Docker daemon traffic from the proxy."
-  default = ""
-  type = string
+  default     = ""
+  type        = string
 }
 
 variable "ecs_no_proxy" {
   description = "The HTTP traffic that should not be forwarded to the specified HTTP_PROXY. You must specify 169.254.169.254,/var/run/docker.sock to filter EC2 instance metadata and Docker daemon traffic from the proxy."
-  default = ""
-  type = string
+  default     = ""
+  type        = string
 }
 
 variable "ecs_enable_task_eni" {
   description = "Whether to enable task networking for tasks to be launched with their own network interface."
-  default = false
-  type = bool
+  default     = false
+  type        = bool
 }
 
 variable "ecs_cni_plugins_path" {
   description = "The path where the cni binary file is located."
-  default = "/amazon-ecs-cni-plugins"
-  type = string  
+  default     = "/amazon-ecs-cni-plugins"
+  type        = string
 }
 
 variable "ecs_disable_docker_health_check" {
   description = "Whether to disable the Docker container health check for the ECS Agent."
-  default = false
-  type = bool
+  default     = false
+  type        = bool
 }
 
 variable "ecs_agent_loglevel" {
-  description= "The level to log at on stdout for esc agent."
+  description = "The level to log at on stdout for esc agent."
   default     = "info"
-  type        = string  
+  type        = string
 }
 
 variable "alarm_cpu_scale_up_threshold" {
@@ -317,60 +317,60 @@ variable "alarm_policy_scale_down_cool_down" {
 
 variable "efs_volume" {
   description = "The EFS volume to attach to ec2 instances. ( ex : fs-05a856xx)"
-  type = string
-  default = ""
+  type        = string
+  default     = ""
 }
 
 variable "efs_mount_point" {
   description = "The EFS volume mount point for EC2 instances."
-  type = string
-  default ="/mnt/efs"
+  type        = string
+  default     = "/mnt/efs"
 }
 
 variable "cron_definition_restart_ecs_demon" {
   description = "The cron définition for restart ecs daemon for sts management(default every 6 hours)"
-  type = string
-  default = "0 */6 * * *"
+  type        = string
+  default     = "0 */6 * * *"
 }
 
 variable "enable_monitoring" {
   description = "If true, the launched EC2 instance cluster node will have detailed monitoring enabled."
-  type = bool
-  default = true
+  type        = bool
+  default     = true
 }
 
 variable "cloudwatch_agent_metrics_collection_interval" {
-  description  = "Specifies how often to collect the cpu metrics, overriding the global metrics_collection_interval specified in the agent section of the configuration file. If you set this value below 60 seconds, each metric is collected as a high-resolution metric."
-  type = number
-  default = 60
+  description = "Specifies how often to collect the cpu metrics, overriding the global metrics_collection_interval specified in the agent section of the configuration file. If you set this value below 60 seconds, each metric is collected as a high-resolution metric."
+  type        = number
+  default     = 60
 }
 
 variable "cloudwatch_agent_metrics_disk_resources" {
   description = "Specifies an array of disk mount points. This field limits CloudWatch to collect metrics from only the listed mount points. You can specify * as the value to collect metrics from all mount points. Defaults to the root / mountpount."
-  type        = "list"
+  type        = list(string)
   default     = ["/"]
 }
 
 variable "cloudwatch_agent_metrics_cpu_resources" {
   description = "Specifies that per-cpu metrics are to be collected. The only allowed value is *. If you include this field and value, per-cpu metrics are collected."
-  type        = "string"
+  type        = string
   default     = "\"resources\": [\"*\"],"
 }
 
 variable "cloudwatch_agent_metrics_config" {
-  description  = "Which metrics should we send to cloudwatch, the default is empty. If the value is empty then  clouwatch agent is not installed .Setting this variable to advanced will send all the available metrics that are provided by the agent. You can find more information here https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/create-cloudwatch-agent-configuration-file-wizard.html. The valids values are  : <empty> / minimal /standard / advanced or custom."
-  type = string
-  default = ""
+  description = "Which metrics should we send to cloudwatch, the default is empty. If the value is empty then  clouwatch agent is not installed .Setting this variable to advanced will send all the available metrics that are provided by the agent. You can find more information here https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/create-cloudwatch-agent-configuration-file-wizard.html. The valids values are  : <empty> / minimal /standard / advanced or custom."
+  type        = string
+  default     = ""
 }
 
 variable "cloudwatch_agent_metrics_custom_config_content" {
-  description  = "The content of cloudwatch agent config if cloudwatch_agent_metrics_config = custom"
-  type = string
-  default = ""
+  description = "The content of cloudwatch agent config if cloudwatch_agent_metrics_config = custom"
+  type        = string
+  default     = ""
 }
 
 variable "cloudwatch_event_autoscaling_sns_arn" {
-  description  = "The ARN of the SNS topic that receives modification events from the autoscaling group."
-  type = string
-  default = ""
+  description = "The ARN of the SNS topic that receives modification events from the autoscaling group."
+  type        = string
+  default     = ""
 }
