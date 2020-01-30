@@ -43,6 +43,12 @@ file = /var/log/dmesg
 log_group_name = /aws/ecs/${ecs_cluster_name}/node/${ecs_group_node}/var/log/dmesg
 log_stream_name = {container_instance_id}
 
+[/var/log/docker]
+file = /var/log/docker
+log_group_name = /aws/ecs/${ecs_cluster_name}/node/${ecs_group_node}
+log_stream_name = {container_instance_id}
+datetime_format = %Y-%m-%dT%H:%M:%S.%f
+
 [/var/log/messages]
 file = /var/log/messages
 log_group_name = /aws/ecs/${ecs_cluster_name}/node/${ecs_group_node}/var/log/messages
@@ -50,7 +56,7 @@ log_stream_name = {container_instance_id}
 datetime_format = %b %d %H:%M:%S
 
 [/var/log/ecs/ecs-init.log]
-file = /var/log/ecs/ecs-init.log*
+file = /var/log/ecs/ecs-init.log
 log_group_name = /aws/ecs/${ecs_cluster_name}/node/${ecs_group_node}/var/log/ecs/ecs-init.log
 log_stream_name = {container_instance_id}
 datetime_format = %Y-%m-%dT%H:%M:%SZ
@@ -67,16 +73,6 @@ log_group_name = /aws/ecs/${ecs_cluster_name}/node/${ecs_group_node}/var/log/ecs
 log_stream_name = {container_instance_id}
 datetime_format = %Y-%m-%dT%H:%M:%SZ
 
-EOF
-
---==BOUNDARY==
-Content-Type: text/x-shellscript; charset="us-ascii"
-#!/usr/bin/env bash
-cat > /etc/logrotate.d/ecs-init <<- 'EOF'
-/var/log/ecs/ecs-init.log* {
-    rotate 24
-    daily
-}
 EOF
 
 --==BOUNDARY==
@@ -154,7 +150,7 @@ Content-Type: text/x-shellscript; charset="us-ascii"
 #write out current crontab
 crontab -l > ecs_restart
 #echo new cron into cron file
-echo "${cron_definition_restart_ecs_demon} systemctl restart ecs" >> ecs_restart
+echo "${cron_definition_restart_ecs_demon} rm -r /var/log/ecs/ecs-init.log* && systemctl restart ecs" >> ecs_restart
 #install ecs_restart file
 crontab ecs_restart
 
