@@ -323,7 +323,7 @@ variable "efs_volume" {
 
 variable "efs_mount_point" {
   description = "The EFS volume mount point for EC2 instances."
-  type = "string"
+  type = string
   default ="/mnt/efs"
 }
 
