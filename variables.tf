@@ -219,6 +219,13 @@ variable "ecs_agent_loglevel" {
   type        = string
 }
 
+variable "esc_datadir" {
+  description = "The name of the persistent data directory on the container that is running the Amazon ECS container agent. The directory is used to save information about the cluster and the agent state."
+  default     = "/data"
+  type        = string
+}
+
+
 variable "alarm_cpu_scale_up_threshold" {
   description = "The CPU consumption threshold of the instance group that triggers an increase in the number of instances in the instance group"
   type        = number
@@ -325,6 +332,30 @@ variable "efs_mount_point" {
   description = "The EFS volume mount point for EC2 instances."
   type        = string
   default     = "/mnt/efs"
+}
+
+variable "ebs_volume_size" {
+  description = "The EBS size of volume for ESC data dir"
+  type        = number
+  default     = 0
+}
+
+variable "ebs_volume_type" {
+  description = "The type of volume. Can be "standard", "gp2", or "io1"."
+  type        = string
+  default     = "standard"
+}
+
+variable "ebs_delete_on_termination" {
+  description = "Whether the volume should be destroyed on instance termination (Default: false). See Preserving Amazon EBS Volumes on Instance Termination for more information."
+  type        = bool
+  default     = false
+}
+
+variable "ebs_kms_key_id" {
+  description = "AWS Key Management Service (AWS KMS) customer master key (CMK) to use when creating the encrypted volume. encrypted must be set to true when this is set."
+  type        = string
+  default     = ""
 }
 
 variable "cron_definition_restart_ecs_demon" {
