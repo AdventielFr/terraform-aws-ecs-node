@@ -167,7 +167,7 @@ locals {
   user_data_option_cloudwatch_agent       = local.cloudwatch_agent_config_content == "" ? "" : data.template_file.user_data_cloudwath_agent_option_tpl.rendered
   enabled_cloudwatch_event_autoscaling    = var.cloudwatch_event_autoscaling_sns_arn != ""
   ebs_device                              = "/dev/xvdk"
-  cloudwatch_agent_metrics_disk_resources = ebs_no_device ? var.cloudwatch_agent_metrics_disk_resources : concat(var.cloudwatch_agent_metrics_disk_resources, [var.ecs_datadir])
+  cloudwatch_agent_metrics_disk_resources = local.ebs_no_device ? var.cloudwatch_agent_metrics_disk_resources : concat(var.cloudwatch_agent_metrics_disk_resources, [var.ecs_datadir])
 }
 
 
