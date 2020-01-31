@@ -1,7 +1,6 @@
-${user_data_option_ebs}
 Content-Type: multipart/mixed; boundary="==BOUNDARY=="
 MIME-Version: 1.0
-
+${user_data_option_ebs}
 --==BOUNDARY==
 Content-Type: text/x-shellscript; charset="us-ascii"
 #!/usr/bin/env bash
