@@ -219,7 +219,7 @@ variable "ecs_agent_loglevel" {
   type        = string
 }
 
-variable "esc_datadir" {
+variable "ecs_datadir" {
   description = "The name of the persistent data directory on the container that is running the Amazon ECS container agent. The directory is used to save information about the cluster and the agent state."
   default     = "/data"
   type        = string
@@ -341,7 +341,7 @@ variable "ebs_volume_size" {
 }
 
 variable "ebs_volume_type" {
-  description = "The type of volume. Can be "standard", "gp2", or "io1"."
+  description = "The type of volume. Can be 'standard', 'gp2', or 'io1'."
   type        = string
   default     = "standard"
 }

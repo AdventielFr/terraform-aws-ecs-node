@@ -51,7 +51,7 @@ data "template_file" "user_data_ebs_option_tpl" {
 
   vars = {
     ecs_datadir = var.ecs_datadir
-    ebs_device = local.ebs_device
+    ebs_device  = local.ebs_device
   }
 }
 
@@ -69,7 +69,7 @@ data "template_file" "cloudwatch_agent_configuration_minimal_tpl" {
 
   vars = {
     metrics_collection_interval = var.cloudwatch_agent_metrics_collection_interval
-    disk_resources              = jsonencode(var.cloudwatch_agent_metrics_disk_resources)
+    disk_resources              = jsonencode(local.cloudwatch_agent_metrics_disk_resources)
     cpu_resources               = var.cloudwatch_agent_metrics_cpu_resources
   }
 
@@ -80,7 +80,7 @@ data "template_file" "cloudwatch_agent_configuration_standard_tpl" {
 
   vars = {
     metrics_collection_interval = var.cloudwatch_agent_metrics_collection_interval
-    disk_resources              = jsonencode(var.cloudwatch_agent_metrics_disk_resources)
+    disk_resources              = jsonencode(local.cloudwatch_agent_metrics_disk_resources)
     cpu_resources               = var.cloudwatch_agent_metrics_cpu_resources
   }
 
@@ -100,7 +100,7 @@ data "template_file" "cloudwatch_agent_configuration_advanced_tpl" {
 
   vars = {
     metrics_collection_interval = var.cloudwatch_agent_metrics_collection_interval
-    disk_resources              = jsonencode(var.cloudwatch_agent_metrics_disk_resources)
+    disk_resources              = jsonencode(local.cloudwatch_agent_metrics_disk_resources)
     cpu_resources               = var.cloudwatch_agent_metrics_cpu_resources
   }
 }
@@ -130,6 +130,7 @@ data "template_file" "user_data_tpl" {
     ecs_apparmor_capable                  = var.ecs_selinux_capable
     ecs_engine_task_cleanup_wait_duration = var.ecs_engine_task_cleanup_wait_duration
     ecs_enable_task_eni                   = var.ecs_enable_task_eni
+    ecs_datadir                           = var.ecs_datadir
     ecs_http_proxy                        = local.ecs_http_proxy
     ecs_no_proxy                          = local.ecs_no_proxy
     ecs_cni_plugins_path                  = var.ecs_cni_plugins_path
@@ -153,19 +154,20 @@ data "template_file" "service_role_policy_tpl" {
 # locals
 #----------------------
 locals {
-  aws_ami_userdefined                  = lookup(var.ecs_optimized_amis, var.aws_region, "")
-  aws_ami                              = local.aws_ami_userdefined == "" ? data.aws_ami.aws_optimized_ecs.id : local.aws_ami_userdefined
-  user_data_aws                        = var.user_data == "" ? data.template_file.user_data_tpl.rendered : var.user_data
-  ecs_group_node                       = var.ecs_group_node == "" ? "default" : var.ecs_group_node
-  ecs_http_proxy                       = var.ecs_http_proxy != "" ? "echo HTTP_PROXY=${var.ecs_http_proxy} >> /etc/ecs/ecs.config" : ""
-  ecs_no_proxy                         = var.ecs_no_proxy != "" ? "echo NO_PROXY=${var.ecs_no_proxy} >> /etc/ecs/ecs.config" : ""
-  cloudwatch_agent_config_content      = var.cloudwatch_agent_metrics_config == "minimal" ? data.template_file.cloudwatch_agent_configuration_minimal_tpl.rendered : (var.cloudwatch_agent_metrics_config == "custom" ? var.cloudwatch_agent_metrics_custom_config_content : (var.cloudwatch_agent_metrics_config == "standard" ? data.template_file.cloudwatch_agent_configuration_standard_tpl.rendered : (var.cloudwatch_agent_metrics_config == "advanced" ? data.template_file.cloudwatch_agent_configuration_advanced_tpl.rendered : "")))
-  ebs_no_device                        = !var.ebs_volume_size >0
-  user_data_option_ebs                 = (!local.ebs_no_device) ? "": data.template_file.user_data_ebs_option_tpl
-  user_data_option_efs                 = var.efs_volume == "" ? "" : data.template_file.user_data_efs_option_tpl.rendered
-  user_data_option_cloudwatch_agent    = local.cloudwatch_agent_config_content == "" ? "" : data.template_file.user_data_cloudwath_agent_option_tpl.rendered
-  enabled_cloudwatch_event_autoscaling = var.cloudwatch_event_autoscaling_sns_arn != ""
-  ebs_device                           = "/dev/xvdk"
+  aws_ami_userdefined                     = lookup(var.ecs_optimized_amis, var.aws_region, "")
+  aws_ami                                 = local.aws_ami_userdefined == "" ? data.aws_ami.aws_optimized_ecs.id : local.aws_ami_userdefined
+  user_data_aws                           = var.user_data == "" ? data.template_file.user_data_tpl.rendered : var.user_data
+  ecs_group_node                          = var.ecs_group_node == "" ? "default" : var.ecs_group_node
+  ecs_http_proxy                          = var.ecs_http_proxy != "" ? "echo HTTP_PROXY=${var.ecs_http_proxy} >> /etc/ecs/ecs.config" : ""
+  ecs_no_proxy                            = var.ecs_no_proxy != "" ? "echo NO_PROXY=${var.ecs_no_proxy} >> /etc/ecs/ecs.config" : ""
+  cloudwatch_agent_config_content         = var.cloudwatch_agent_metrics_config == "minimal" ? data.template_file.cloudwatch_agent_configuration_minimal_tpl.rendered : (var.cloudwatch_agent_metrics_config == "custom" ? var.cloudwatch_agent_metrics_custom_config_content : (var.cloudwatch_agent_metrics_config == "standard" ? data.template_file.cloudwatch_agent_configuration_standard_tpl.rendered : (var.cloudwatch_agent_metrics_config == "advanced" ? data.template_file.cloudwatch_agent_configuration_advanced_tpl.rendered : "")))
+  ebs_no_device                           = var.ebs_volume_size <= 0
+  user_data_option_ebs                    = local.ebs_no_device ? "" : data.template_file.user_data_ebs_option_tpl.rendered
+  user_data_option_efs                    = var.efs_volume == "" ? "" : data.template_file.user_data_efs_option_tpl.rendered
+  user_data_option_cloudwatch_agent       = local.cloudwatch_agent_config_content == "" ? "" : data.template_file.user_data_cloudwath_agent_option_tpl.rendered
+  enabled_cloudwatch_event_autoscaling    = var.cloudwatch_event_autoscaling_sns_arn != ""
+  ebs_device                              = "/dev/xvdk"
+  cloudwatch_agent_metrics_disk_resources = ebs_no_device ? var.cloudwatch_agent_metrics_disk_resources : concat(var.cloudwatch_agent_metrics_disk_resources, [var.ecs_datadir])
 }
 
 
@@ -174,7 +176,7 @@ locals {
 #----------------------
 
 # launch template
-resource "aws_launch_template" "launch_template" {
+resource "aws_launch_template" "this" {
   name                   = "${var.environment}-ecs-node-${local.ecs_group_node}-lt"
   image_id               = local.aws_ami
   description            = "Launch template for EC2 node '${local.ecs_group_node}' of ${var.ecs_cluster_name} ECS cluster."
@@ -189,12 +191,12 @@ resource "aws_launch_template" "launch_template" {
 
   block_device_mappings {
     device_name = local.ebs_device
-    no_device = 
+    no_device   = local.ebs_no_device
     ebs {
-      volume_size = var.ebs_volume_size
-      encrypted = var.ebs_kms_key_id == ""
-      kms_key_id = var.ebs_kms_key_id
-      volume_type = var.ebs_volume_type
+      volume_size           = var.ebs_volume_size
+      encrypted             = var.ebs_kms_key_id != ""
+      kms_key_id            = var.ebs_kms_key_id
+      volume_type           = var.ebs_volume_type
       delete_on_termination = var.ebs_delete_on_termination
     }
   }
@@ -221,6 +223,7 @@ resource "aws_launch_template" "launch_template" {
   monitoring {
     enabled = var.enable_monitoring
   }
+  ebs_optimized = true
 
 }
 
@@ -499,5 +502,3 @@ resource "aws_cloudwatch_event_target" "this" {
   target_id = "SendToSNS"
   arn       = var.cloudwatch_event_autoscaling_sns_arn
 }
-
-
