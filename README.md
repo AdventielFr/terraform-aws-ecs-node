@@ -158,11 +158,15 @@ Name : **{{environment}}**-ecs-service-**{{ecs_group_node}}**-role
 | aws\_region | The AWS region to deploy | string | n/a |
 | cloudwatch\_agent\_metrics\_collection\_interval | Specifies how often to collect the cpu metrics, overriding the global metrics\_collection\_interval specified in the agent section of the configuration file. If you set this value below 60 seconds, each metric is collected as a high-resolution metric. | number | 60 |
 | cloudwatch\_agent\_metrics\_config | Which metrics should we send to cloudwatch, the default is empty. If the value is empty then  clouwatch agent is not installed .Setting this variable to advanced will send all the available metrics that are provided by the agent. You can find more information here https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/create-cloudwatch-agent-configuration-file-wizard.html. The valids values are  : <empty> / minimal /standard / advanced or custom. | string | "" |
-| cloudwatch\_agent\_metrics\_cpu\_resources | Specifies that per-cpu metrics are to be collected. The only allowed value is *. If you include this field and value, per-cpu metrics are collected. | "string" | "\"resources\": \[\"*\"\]," |
+| cloudwatch\_agent\_metrics\_cpu\_resources | Specifies that per-cpu metrics are to be collected. The only allowed value is *. If you include this field and value, per-cpu metrics are collected. | string | "\"resources\": \[\"*\"\]," |
 | cloudwatch\_agent\_metrics\_custom\_config\_content | The content of cloudwatch agent config if cloudwatch\_agent\_metrics\_config = custom | string | "" |
-| cloudwatch\_agent\_metrics\_disk\_resources | Specifies an array of disk mount points. This field limits CloudWatch to collect metrics from only the listed mount points. You can specify * as the value to collect metrics from all mount points. Defaults to the root / mountpount. | "list" | \["/"\] |
+| cloudwatch\_agent\_metrics\_disk\_resources | Specifies an array of disk mount points. This field limits CloudWatch to collect metrics from only the listed mount points. You can specify * as the value to collect metrics from all mount points. Defaults to the root / mountpount. | list(string) | \["/"\] |
 | cloudwatch\_event\_autoscaling\_sns\_arn | The ARN of the SNS topic that receives modification events from the autoscaling group. | string | "" |
 | cron\_definition\_restart\_ecs\_demon | The cron définition for restart ecs daemon for sts management(default every 6 hours) | string | "0 */6 * * *" |
+| ebs\_delete\_on\_termination | Whether the volume should be destroyed on instance termination (Default: false). See Preserving Amazon EBS Volumes on Instance Termination for more information. | bool | false |
+| ebs\_kms\_key\_id | AWS Key Management Service (AWS KMS) customer master key (CMK) to use when creating the encrypted volume. encrypted must be set to true when this is set. | string | "" |
+| ebs\_volume\_size | The EBS size of volume for ESC data dir | number | 0 |
+| ebs\_volume\_type | The type of volume. Can be 'standard', 'gp2', or 'io1'. | string | "standard" |
 | ecs\_agent\_loglevel | The level to log at on stdout for esc agent. | string | "info" |
 | ecs\_apparmor\_capable | Whether AppArmor is available on the container instance. | bool | false |
 | ecs\_cloudwath\_retention\_in\_days | The Cloudwath retention days for all Cloudwath LogGroup created. | number | 7 |
@@ -170,6 +174,7 @@ Name : **{{environment}}**-ecs-service-**{{ecs_group_node}}**-role
 | ecs\_cni\_plugins\_path | The path where the cni binary file is located. | string | "/amazon-ecs-cni-plugins" |
 | ecs\_container\_start\_timeout | Time duration to wait before giving up on starting a container. | string | "3m" |
 | ecs\_container\_stop\_timeout | Time duration to wait from when a task is stopped before its containers are forcefully killed if they do not exit normally on their own. | string | "30s" |
+| ecs\_datadir | The name of the persistent data directory on the container that is running the Amazon ECS container agent. The directory is used to save information about the cluster and the agent state. | string | "/data" |
 | ecs\_disable\_docker\_health\_check | Whether to disable the Docker container health check for the ECS Agent. | bool | false |
 | ecs\_disable\_image\_cleanup | Whether to disable automated image cleanup for the Amazon ECS agent. For more information. | bool | false |
 | ecs\_disable\_privileged | Whether launching privileged containers is disabled on the container instance. If this value is set to true, privileged containers are not permitted. | bool | false |
@@ -188,7 +193,7 @@ Name : **{{environment}}**-ecs-service-**{{ecs_group_node}}**-role
 | ecs\_num\_images\_delete\_per\_cycle | The maximum number of images to delete in a single automated image cleanup cycle. If set to less than 1, the value is ignored. | number | 5 |
 | ecs\_optimized\_amis | The map of region to ecs optimized AMI. By default the latest available will be chosen. | map | {} |
 | ecs\_selinux\_capable | Whether SELinux is available on the container instance. | bool | false |
-| efs\_mount\_point | The EFS volume mount point for EC2 instances. | "string" | "/mnt/efs" |
+| efs\_mount\_point | The EFS volume mount point for EC2 instances. | string | "/mnt/efs" |
 | efs\_volume | The EFS volume to attach to ec2 instances. ( ex : fs-05a856xx) | string | "" |
 | enable\_monitoring | If true, the launched EC2 instance cluster node will have detailed monitoring enabled. | bool | true |
 | environment | The logical name of the environment, will be used as prefix and in tags. | string | n/a |
