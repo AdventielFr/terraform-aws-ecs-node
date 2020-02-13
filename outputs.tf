@@ -1,11 +1,11 @@
 output "aws_launch_template_id" {
   description = "The ID of the launch template."
-  value       = aws_launch_template.this.id
+  value       = local.ebs_no_device ? aws_launch_template.without_ebs[0].id : aws_launch_template.with_ebs[0].id
 }
 
 output "aws_launch_template_name" {
   description = "The name of the launch template."
-  value       = aws_launch_template.this.name
+  value       = local.ebs_no_device ? aws_launch_template.without_ebs[0].name : aws_launch_template.with_ebs[0].name
 }
 
 output "aws_autoscaling_group_id" {

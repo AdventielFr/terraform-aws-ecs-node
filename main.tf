@@ -177,7 +177,7 @@ locals {
 
 # launch template
 resource "aws_launch_template" "with_ebs" {
-  count                  = local.ebs_device ? 1 : 0
+  count                  = local.ebs_no_device ? 0 : 1
   name                   = "${var.environment}-ecs-node-${local.ecs_group_node}-lt"
   image_id               = local.aws_ami
   description            = "Launch template for EC2 node '${local.ecs_group_node}' of ${var.ecs_cluster_name} ECS cluster."
@@ -229,7 +229,7 @@ resource "aws_launch_template" "with_ebs" {
 }
 
 resource "aws_launch_template" "without_ebs" {
-  count                  = local.ebs_device ? 1 : 0
+  count                  = local.ebs_no_device ? 1 : 0
   name                   = "${var.environment}-ecs-node-${local.ecs_group_node}-lt"
   image_id               = local.aws_ami
   description            = "Launch template for EC2 node '${local.ecs_group_node}' of ${var.ecs_cluster_name} ECS cluster."
@@ -277,7 +277,7 @@ resource "aws_autoscaling_group" "this" {
   desired_capacity          = var.asg_desired
   health_check_grace_period = var.asg_health_period
   launch_template {
-    id      = local.ebs_device ? aws_launch_template.with_ebs.id : aws_launch_template.without_ebs.id
+    id      = local.ebs_no_device ? aws_launch_template.without_ebs[0].id : aws_launch_template.with_ebs[0].id
     version = "$Latest"
   }
 }
