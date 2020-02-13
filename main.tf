@@ -176,7 +176,8 @@ locals {
 #----------------------
 
 # launch template
-resource "aws_launch_template" "this" {
+resource "aws_launch_template" "with_ebs" {
+  count                  = local.ebs_device ? 1 : 0
   name                   = "${var.environment}-ecs-node-${local.ecs_group_node}-lt"
   image_id               = local.aws_ami
   description            = "Launch template for EC2 node '${local.ecs_group_node}' of ${var.ecs_cluster_name} ECS cluster."
@@ -223,7 +224,47 @@ resource "aws_launch_template" "this" {
   monitoring {
     enabled = var.enable_monitoring
   }
-  ebs_optimized = true
+  ebs_optimized = var.ebs_optimized
+
+}
+
+resource "aws_launch_template" "without_ebs" {
+  count                  = local.ebs_device ? 1 : 0
+  name                   = "${var.environment}-ecs-node-${local.ecs_group_node}-lt"
+  image_id               = local.aws_ami
+  description            = "Launch template for EC2 node '${local.ecs_group_node}' of ${var.ecs_cluster_name} ECS cluster."
+  vpc_security_group_ids = var.instance_security_groups
+  user_data              = base64encode(local.user_data_aws)
+  instance_type          = var.instance_type
+  key_name               = var.key_name
+
+  iam_instance_profile {
+    name = aws_iam_instance_profile.this.name
+  }
+
+  lifecycle {
+    create_before_destroy = true
+  }
+
+  tags = {
+    Name         = "${var.environment}-ecs-node-${local.ecs_group_node}-lt"
+    Environment  = var.environment
+    EcsGroupNode = var.ecs_group_node
+  }
+
+  tag_specifications {
+    resource_type = "instance"
+    tags = {
+      Name         = "${var.environment}-ecs-node-${local.ecs_group_node}"
+      Environment  = var.environment
+      EcsGroupNode = local.ecs_group_node
+    }
+  }
+
+  monitoring {
+    enabled = var.enable_monitoring
+  }
+  ebs_optimized = var.ebs_optimized
 
 }
 
@@ -236,7 +277,7 @@ resource "aws_autoscaling_group" "this" {
   desired_capacity          = var.asg_desired
   health_check_grace_period = var.asg_health_period
   launch_template {
-    id      = aws_launch_template.this.id
+    id      = local.ebs_device ? aws_launch_template.with_ebs.id : aws_launch_template.without_ebs.id
     version = "$Latest"
   }
 }

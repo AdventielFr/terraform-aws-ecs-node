@@ -165,6 +165,7 @@ Name : **{{environment}}**-ecs-service-**{{ecs_group_node}}**-role
 | cron\_definition\_restart\_ecs\_demon | The cron définition for restart ecs daemon for sts management(default every 6 hours) | string | "0 */6 * * *" |
 | ebs\_delete\_on\_termination | Whether the volume should be destroyed on instance termination (Default: false). See Preserving Amazon EBS Volumes on Instance Termination for more information. | bool | false |
 | ebs\_kms\_key\_id | AWS Key Management Service (AWS KMS) customer master key (CMK) to use when creating the encrypted volume. encrypted must be set to true when this is set. | string | "" |
+| ebs\_optimized | If true, the launched EC2 instance will be EBS-optimized. | bool | false |
 | ebs\_volume\_size | The EBS size of volume for ESC data dir | number | 0 |
 | ebs\_volume\_type | The type of volume. Can be 'standard', 'gp2', or 'io1'. | string | "standard" |
 | ecs\_agent\_loglevel | The level to log at on stdout for esc agent. | string | "info" |

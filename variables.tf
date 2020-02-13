@@ -358,6 +358,12 @@ variable "ebs_kms_key_id" {
   default     = ""
 }
 
+variable "ebs_optimized" {
+  description = "If true, the launched EC2 instance will be EBS-optimized."
+  type        = bool
+  default     = false
+}
+
 variable "cron_definition_restart_ecs_demon" {
   description = "The cron définition for restart ecs daemon for sts management(default every 6 hours)"
   type        = string
@@ -369,6 +375,8 @@ variable "enable_monitoring" {
   type        = bool
   default     = true
 }
+
+
 
 variable "cloudwatch_agent_metrics_collection_interval" {
   description = "Specifies how often to collect the cpu metrics, overriding the global metrics_collection_interval specified in the agent section of the configuration file. If you set this value below 60 seconds, each metric is collected as a high-resolution metric."
