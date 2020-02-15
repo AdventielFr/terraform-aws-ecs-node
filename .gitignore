@@ -5,12 +5,21 @@
 # Module directory
 .terraform/
 
-# keys
-*id_rsa*
+# Jetbrains
+.idea/
 
-.idea
+.vscode/
+
+# servelesss
+node_modules
+include
+bin
+.serverless
+lib
 .DS_Store
-*envrc
-atlassian-ide-plugin.xml
 
 env/
+
+__pycache__/
+
+package-lock.json

@@ -413,3 +413,15 @@ variable "cloudwatch_event_autoscaling_sns_arn" {
   type        = string
   default     = ""
 }
+
+variable "auto_update_ecs_agent" {
+  type        = bool
+  default     = true
+  description = "Auto update ECS cluster Agent for ECS group node in Cluster"
+}
+
+variable "scan_alarm_clock" {
+  description = "The time between two scan to search for update ecs agent"
+  type        = number
+  default     = 1440
+}
