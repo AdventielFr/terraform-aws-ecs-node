@@ -19,12 +19,12 @@ def main(event, context):
         cluster_name = get_cluster_name()
         container_instance_group_node = get_container_instance_group_node() 
         agent_version = get_last_agent_version()
-        logger.info(agent_version)
+        logger.info(f'ecs last-agent: {agent_version}')
         filter_container_instances = get_filter_container_instances(agent_version, container_instance_group_node )
-        logger.info(filter_container_instances)
+        logger.info(f'filter cougtainer instance: : {filter_container_instances}')
         container_instances = get_container_instances(cluster_name,filter_container_instances)
         if container_instances:
-            update_agent_container_instances(cluster_name, container_instances)
+            update_agent_container_instances(client, cluster_name, container_instances)
         else:
             logger.info('ECS Agent is update to date for Container intances')
     except Exception as e:
@@ -92,7 +92,7 @@ def update_agent_container_instances(client, cluster_name, container_instances):
     for container_instance in container_instances:
         update_agent_container_instance(client, cluster_name, container_instance)
 
-def send_message(self, message, verbosity = 'INFO'):
+def send_message(message, verbosity = 'INFO'):
     """send message to sns topic"""
     sns_client = boto3.client('sns')
     aws_sns_result_arn = os.environ.get('AWS_SNS_RESULT_ARN')

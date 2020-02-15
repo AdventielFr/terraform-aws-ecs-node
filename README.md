@@ -155,6 +155,7 @@ Name : **{{environment}}**-ecs-service-**{{ecs_group_node}}**-role
 | asg\_health\_period | Time (in seconds) after instance comes into service before checking health. | number | 180 |
 | asg\_max | The maximum numbers of instances in the auto scaling group. | number | 1 |
 | asg\_min | The minimum numbers of instances in the auto scaling group. | number | 1 |
+| auto\_update\_ecs\_agent | Auto update ECS cluster Agent for ECS group node in Cluster | bool | true |
 | aws\_region | The AWS region to deploy | string | n/a |
 | cloudwatch\_agent\_metrics\_collection\_interval | Specifies how often to collect the cpu metrics, overriding the global metrics\_collection\_interval specified in the agent section of the configuration file. If you set this value below 60 seconds, each metric is collected as a high-resolution metric. | number | 60 |
 | cloudwatch\_agent\_metrics\_config | Which metrics should we send to cloudwatch, the default is empty. If the value is empty then  clouwatch agent is not installed .Setting this variable to advanced will send all the available metrics that are provided by the agent. You can find more information here https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/create-cloudwatch-agent-configuration-file-wizard.html. The valids values are  : <empty> / minimal /standard / advanced or custom. | string | "" |
@@ -198,9 +199,11 @@ Name : **{{environment}}**-ecs-service-**{{ecs_group_node}}**-role
 | efs\_volume | The EFS volume to attach to ec2 instances. ( ex : fs-05a856xx) | string | "" |
 | enable\_monitoring | If true, the launched EC2 instance cluster node will have detailed monitoring enabled. | bool | true |
 | environment | The logical name of the environment, will be used as prefix and in tags. | string | n/a |
+| function\_timeout | The amount of time your Lambda Functions has to run in seconds. | number | 300 |
 | instance\_security\_groups | The List of security group for ecs cluster node. | list(string) | n/a |
 | instance\_type | Default AWS instance type. | string | "t2.small" |
 | key\_name | The name of AWS key pair | string | "" |
+| scan\_alarm\_clock | The time between two scan to search for update ecs agent | number | 1440 |
 | subnets | The subnets where the instances will be deployed to. | list(string) | n/a |
 | user\_data | The override the module embedded user data script. | string | "" |
 | vpc\_cidr | The CIDR for the VPC. | string | n/a |
