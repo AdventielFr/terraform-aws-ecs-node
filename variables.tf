@@ -225,7 +225,6 @@ variable "ecs_datadir" {
   type        = string
 }
 
-
 variable "alarm_cpu_scale_up_threshold" {
   description = "The CPU consumption threshold of the instance group that triggers an increase in the number of instances in the instance group"
   type        = number
@@ -376,8 +375,6 @@ variable "enable_monitoring" {
   default     = true
 }
 
-
-
 variable "cloudwatch_agent_metrics_collection_interval" {
   description = "Specifies how often to collect the cpu metrics, overriding the global metrics_collection_interval specified in the agent section of the configuration file. If you set this value below 60 seconds, each metric is collected as a high-resolution metric."
   type        = number
@@ -424,4 +421,10 @@ variable "scan_alarm_clock" {
   description = "The time between two scan to search for update ecs agent"
   type        = number
   default     = 1440
+}
+
+variable "function_timeout" {
+  description = "The amount of time your Lambda Functions has to run in seconds."
+  default     = 300
+  type        = number
 }

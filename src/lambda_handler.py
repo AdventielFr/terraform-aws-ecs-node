@@ -15,7 +15,7 @@ logger.setLevel(logging.INFO)
 
 def main(event, context):
     try:
-        client = boto3.client('ecs', region_name = get_region())
+        client = boto3.client('ecs')
         cluster_name = get_cluster_name()
         container_instance_group_node = get_container_instance_group_node() 
         agent_version = get_last_agent_version()
@@ -63,7 +63,7 @@ def get_container_instances(client, cluster_name, filter_instances, nextToken=No
     if 'containerInstanceArns' in response:
         result += response['containerInstanceArns']
     if 'nextToken' in response:
-        result += get_container_instances(cluster_name, filter_instances, response['nextToken'])
+        result += get_container_instances(client, cluster_name, filter_instances, response['nextToken'])
     return result       
 
 def update_agent_container_instance(client,  cluster_name, container_instance):

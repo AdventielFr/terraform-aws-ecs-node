@@ -6,7 +6,7 @@ locals {
   aws_ami                                   = local.aws_ami_userdefined == "" ? data.aws_ami.aws_optimized_ecs.id : local.aws_ami_userdefined
   user_data_aws                             = var.user_data == "" ? data.template_file.user_data_tpl.rendered : var.user_data
   ecs_group_node                            = var.ecs_group_node == "" ? "default" : var.ecs_group_node
-  auto_update_ecs_cluster_agent_lambda_name = "${var.ecs_cluster_name}-${ecs_group_node}-update-agent"
+  auto_update_ecs_cluster_agent_lambda_name = "${var.ecs_cluster_name}-${var.ecs_group_node}-update-agent"
   ecs_http_proxy                            = var.ecs_http_proxy != "" ? "echo HTTP_PROXY=${var.ecs_http_proxy} >> /etc/ecs/ecs.config" : ""
   ecs_no_proxy                              = var.ecs_no_proxy != "" ? "echo NO_PROXY=${var.ecs_no_proxy} >> /etc/ecs/ecs.config" : ""
   cloudwatch_agent_config_content           = var.cloudwatch_agent_metrics_config == "minimal" ? data.template_file.cloudwatch_agent_configuration_minimal_tpl.rendered : (var.cloudwatch_agent_metrics_config == "custom" ? var.cloudwatch_agent_metrics_custom_config_content : (var.cloudwatch_agent_metrics_config == "standard" ? data.template_file.cloudwatch_agent_configuration_standard_tpl.rendered : (var.cloudwatch_agent_metrics_config == "advanced" ? data.template_file.cloudwatch_agent_configuration_advanced_tpl.rendered : "")))
