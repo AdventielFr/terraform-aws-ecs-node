@@ -22,7 +22,7 @@ def main(event, context):
         logger.info(f'ecs last-agent: {agent_version}')
         filter_container_instances = get_filter_container_instances(agent_version, container_instance_group_node )
         logger.info(f'filter cougtainer instance: : {filter_container_instances}')
-        container_instances = get_container_instances(cluster_name,filter_container_instances)
+        container_instances = get_container_instances(client, cluster_name,filter_container_instances)
         if container_instances:
             update_agent_container_instances(client, cluster_name, container_instances)
         else:
