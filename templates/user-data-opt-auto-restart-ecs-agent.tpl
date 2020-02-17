@@ -1,7 +1,7 @@
 --==BOUNDARY==
 Content-Type: text/x-shellscript; charset="us-ascii"
 #!/usr/bin/env bash
-yum install python-pip
+yum install -y python-pip
 pip install --upgrade pip
 pip install goto-statement
 pip install pygtail
@@ -77,7 +77,7 @@ Conflicts=getty@tty1.service
 
 [Service]
 Type=simple
-ExecStart=/usr/bin/python3 /usr/bin/auto-restart-ecs.py
+ExecStart=/usr/bin/python /usr/bin/auto-restart-ecs.py
 StandardInput=tty-force
 
 [Install]
