@@ -1,10 +1,10 @@
 --==BOUNDARY==
 Content-Type: text/x-shellscript; charset="us-ascii"
 #!/usr/bin/env bash
-yum install -y python3 python-pip
+yum install python-pip
 pip install --upgrade pip
-pip3 install goto-statement
-pip3 install pygtail
+pip install goto-statement
+pip install pygtail
 
 --==BOUNDARY==
 Content-Type: text/x-shellscript; charset="us-ascii"
@@ -12,7 +12,7 @@ Content-Type: text/x-shellscript; charset="us-ascii"
 mkdir -f /var/log/ecs
 # Write the file to /usr/bin
 cat > /usr/bin/auto-restart-ecs.py <<- EOF
-#!/usr/bin/env python3
+#!/usr/bin/env python
 # -*- coding: utf-8 -*-
 import re
 import os.path
@@ -40,10 +40,10 @@ def main():
     label .start
     
     while not os.path.exists(watch_file):
-        logger.info(f'Wait {wait_time}s ,{watch_file} not exist.')
+        logger.info('Wait '+str(wait_time) +'s ,'+watch_file+' not exist.')
         time.sleep(wait_time)
 
-    logger.info(f'Starting scan {watch_file} ...')
+    logger.info('Starting scan ' + watch_file + ' ...')
     try:
         if os.path.exists(watch_file+'.offset'):
             os.remove(watch_file+'.offset')
@@ -54,9 +54,9 @@ def main():
                 logger.info('Try to restart esc service ...')
                 exit_code = os.system('systemctl restart ecs')
                 if exit_code !=0 :
-                    logger.info(f'Fail to restart ecs service ( exit code : {exit_code} )')
+                    logger.info('Fail to restart ecs service ( exit code : '+str(exit_code) +' )')
                 else:
-                    logger.info(f'Success to restart ecs service')
+                    logger.info('Success to restart ecs service')
  
     except FileNotFoundError as e:
         goto .start
