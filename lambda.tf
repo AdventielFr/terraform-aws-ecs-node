@@ -72,14 +72,12 @@ resource "aws_cloudwatch_event_target" "check_every_x_minutes" {
   arn       = aws_lambda_function.auto_update_ecs_cluster_agent[0].arn
 }
 
-
 data "aws_iam_policy_document" "auto_update_ecs_cluster_agent" {
-  count = var.auto_update_ecs_agent ? 1 : 0
+  count = var.auto_update_ecs_agent && lenght(aws_sns_topic.auto_update_ecs_cluster_agent)>0 ? 1 : 0
   statement {
     sid       = "AllowSNSPermissions"
     effect    = "Allow"
-    resources = ["test"
-    ]
+    resources = [ aws_sns_topic.auto_update_ecs_cluster_agent[0].arn ]
 
     actions = [
       "sns:Publish"
