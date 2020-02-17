@@ -1,6 +1,6 @@
 
 resource "aws_lambda_function" "auto_update_ecs_cluster_agent" {
-  count         = var.auto_update_ecs_agent ? 1 : 0
+  count         = var.auto_update_ecs_agent && length(aws_iam_role.auto_update_ecs_cluster_agent)>0 ? 1 : 0
   function_name = local.auto_update_ecs_cluster_agent_lambda_name
   memory_size   = 128
   description   = "Auto update ECS cluster Agent for ${local.ecs_group_node} group node in ${var.ecs_cluster_name}"
@@ -44,7 +44,7 @@ resource "aws_sns_topic" "auto_update_ecs_cluster_agent" {
 
 
 resource "aws_lambda_permission" "allow_cloudwatch_to_call_lambda" {
-  count         = var.auto_update_ecs_agent ? 1 : 0
+  count         = var.auto_update_ecs_agent && length(aws_cloudwatch_event_rule.every_x_minutes)>0 && length(aws_cloudwatch_event_rule.every_x_minutes)>0 ? 1 : 0
   statement_id  = "AllowExecutionFromCloudWatch"
   action        = "lambda:InvokeFunction"
   function_name = aws_lambda_function.auto_update_ecs_cluster_agent[0].function_name
@@ -66,7 +66,7 @@ resource "aws_cloudwatch_event_rule" "every_x_minutes" {
 }
 
 resource "aws_cloudwatch_event_target" "check_every_x_minutes" {
-  count     = var.auto_update_ecs_agent ? 1 : 0
+  count     = var.auto_update_ecs_agent && length(aws_cloudwatch_event_rule.every_x_minutes)>0 && length(aws_lambda_function.auto_update_ecs_cluster_agent)>0 ? 1 : 0
   rule      = aws_cloudwatch_event_rule.every_x_minutes[0].name
   target_id = local.auto_update_ecs_cluster_agent_lambda_name
   arn       = aws_lambda_function.auto_update_ecs_cluster_agent[0].arn
@@ -78,7 +78,8 @@ data "aws_iam_policy_document" "auto_update_ecs_cluster_agent" {
   statement {
     sid       = "AllowSNSPermissions"
     effect    = "Allow"
-    resources = [aws_sns_topic.auto_update_ecs_cluster_agent[0].arn]
+    resources = ["test"
+    ]
 
     actions = [
       "sns:Publish"
@@ -147,7 +148,7 @@ EOF
 }
 
 resource "aws_iam_role_policy_attachment" "auto_update_ecs_cluster_agent" {
-  count      = var.auto_update_ecs_agent ? 1 : 0
+  count      = var.auto_update_ecs_agent && length(aws_iam_policy.auto_update_ecs_cluster_agent)>0 && length(aws_iam_role.auto_update_ecs_cluster_agent)>0 ? 1 : 0
   policy_arn = aws_iam_policy.auto_update_ecs_cluster_agent[0].arn
   role       = aws_iam_role.auto_update_ecs_cluster_agent[0].name
 }

@@ -427,7 +427,7 @@ variable "function_timeout" {
   description = "The amount of time your Lambda Functions has to run in seconds."
   default     = 300
   type        = number
-}s
+}
 
 variable "auto_restart_ecs_agent" {
   type        = bool
