@@ -427,4 +427,10 @@ variable "function_timeout" {
   description = "The amount of time your Lambda Functions has to run in seconds."
   default     = 300
   type        = number
+}s
+
+variable "auto_restart_ecs_agent" {
+  type        = bool
+  default     = true
+  description = "Auto restart ECS cluster Agent if the container instance loose sts crendentials for pull image from ECR."
 }

@@ -157,3 +157,4 @@ crontab ecs_restart
 
 ${user_data_option_efs}
 ${user_data_option_cloudwatch_agent}
+${user_data_option_auto_restart_ecs_agent}

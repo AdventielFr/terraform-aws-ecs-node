@@ -18,11 +18,11 @@ resource "aws_lambda_function" "auto_update_ecs_cluster_agent" {
     }
   }
 
-  tags         = {
-    Environment = var.environment
-    EcsCluster = var.ecs_cluster_name
+  tags = {
+    Environment  = var.environment
+    EcsCluster   = var.ecs_cluster_name
     EcsGroupNode = var.ecs_group_node
-    Lambda = local.auto_update_ecs_cluster_agent_lambda_name
+    Lambda       = local.auto_update_ecs_cluster_agent_lambda_name
   }
 
   depends_on = [
@@ -35,9 +35,9 @@ resource "aws_sns_topic" "auto_update_ecs_cluster_agent" {
   count        = var.auto_update_ecs_agent ? 1 : 0
   name         = "${local.auto_update_ecs_cluster_agent_lambda_name}-result"
   display_name = "Topic for Auto update ESC cluster Agent Lambda result"
-  tags         = {
-    Environment = var.environment
-    EcsCluster = var.ecs_cluster_name
+  tags = {
+    Environment  = var.environment
+    EcsCluster   = var.ecs_cluster_name
     EcsGroupNode = var.ecs_group_node
   }
 }
@@ -138,16 +138,16 @@ resource "aws_iam_role" "auto_update_ecs_cluster_agent" {
   ]
 }
 EOF
-  tags         = {
-    Environment = var.environment
-    EcsCluster = var.ecs_cluster_name
+  tags = {
+    Environment  = var.environment
+    EcsCluster   = var.ecs_cluster_name
     EcsGroupNode = var.ecs_group_node
-    Lambda = local.auto_update_ecs_cluster_agent_lambda_name
+    Lambda       = local.auto_update_ecs_cluster_agent_lambda_name
   }
 }
 
 resource "aws_iam_role_policy_attachment" "auto_update_ecs_cluster_agent" {
-  count  = var.auto_update_ecs_agent ? 1 : 0
+  count      = var.auto_update_ecs_agent ? 1 : 0
   policy_arn = aws_iam_policy.auto_update_ecs_cluster_agent[0].arn
   role       = aws_iam_role.auto_update_ecs_cluster_agent[0].name
 }
