@@ -114,7 +114,7 @@ data "aws_iam_policy_document" "auto_update_ecs_cluster_agent" {
 }
 
 resource "aws_iam_policy" "auto_update_ecs_cluster_agent" {
-  count  = var.auto_update_ecs_agent ? 1 : 0
+  count  = var.auto_update_ecs_agent && length(data.aws_iam_policy_document.auto_update_ecs_cluster_agent)>0 ? 1 : 0
   name   = "${local.auto_update_ecs_cluster_agent_lambda_name}-policy"
   policy = data.aws_iam_policy_document.auto_update_ecs_cluster_agent[0].json
 }
