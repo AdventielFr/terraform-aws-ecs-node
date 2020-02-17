@@ -132,10 +132,12 @@ data "template_file" "user_data_tpl" {
     ecs_engine_task_cleanup_wait_duration   = var.ecs_engine_task_cleanup_wait_duration
     ecs_enable_task_eni                     = var.ecs_enable_task_eni
     ecs_datadir                             = var.ecs_datadir
+    ecs_updates_enabled                     = var.ecs_updates_enabled
     ecs_http_proxy                          = local.ecs_http_proxy
     ecs_no_proxy                            = local.ecs_no_proxy
     ecs_cni_plugins_path                    = var.ecs_cni_plugins_path
     ecs_disable_docker_health_check         = var.ecs_disable_docker_health_check
+    ecs_checkpoint                          = var.ebs_volume_size > 0
     cron_definition_restart_ecs_demon       = var.cron_definition_restart_ecs_demon
     user_data_option_efs                    = local.user_data_option_efs
     user_data_option_cloudwatch_agent       = local.user_data_option_cloudwatch_agent

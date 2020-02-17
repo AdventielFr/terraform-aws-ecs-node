@@ -31,6 +31,7 @@ echo ECS_ENGINE_TASK_CLEANUP_WAIT_DURATION=${ecs_engine_task_cleanup_wait_durati
 echo ECS_ENABLE_TASK_ENI=${ecs_enable_task_eni} >> /etc/ecs/ecs.config
 echo ECS_CNI_PLUGINS_PATH=${ecs_cni_plugins_path} >> /etc/ecs/ecs.config
 echo ECS_DISABLE_DOCKER_HEALTH_CHECK=${ecs_disable_docker_health_check} >> /etc/ecs/ecs.config
+echo ECS_CHECKPOINT=${ecs_checkpoint} >> /etc/ecs/ecs.config
 ${ecs_http_proxy}
 ${ecs_no_proxy}
 
@@ -144,16 +145,6 @@ Content-Type: text/x-shellscript; charset="us-ascii"
 systemctl daemon-reload
 systemctl enable amazon-ssm-agent
 systemctl start amazon-ssm-agent
-
---==BOUNDARY==
-Content-Type: text/x-shellscript; charset="us-ascii"
-#!/bin/sh
-#write out current crontab
-crontab -l > ecs_restart
-#echo new cron into cron file
-echo "${cron_definition_restart_ecs_demon} rm -r /var/log/ecs/ecs-init.log* && systemctl restart ecs" >> ecs_restart
-#install ecs_restart file
-crontab ecs_restart
 
 ${user_data_option_efs}
 ${user_data_option_cloudwatch_agent}
