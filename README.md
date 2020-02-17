@@ -155,6 +155,7 @@ Name : **{{environment}}**-ecs-service-**{{ecs_group_node}}**-role
 | asg\_health\_period | Time (in seconds) after instance comes into service before checking health. | number | 180 |
 | asg\_max | The maximum numbers of instances in the auto scaling group. | number | 1 |
 | asg\_min | The minimum numbers of instances in the auto scaling group. | number | 1 |
+| auto\_restart\_ecs\_agent | Auto restart ECS cluster Agent if the container instance loose sts crendentials for pull image from ECR. | bool | true |
 | auto\_update\_ecs\_agent | Auto update ECS cluster Agent for ECS group node in Cluster | bool | true |
 | aws\_region | The AWS region to deploy | string | n/a |
 | cloudwatch\_agent\_metrics\_collection\_interval | Specifies how often to collect the cpu metrics, overriding the global metrics\_collection\_interval specified in the agent section of the configuration file. If you set this value below 60 seconds, each metric is collected as a high-resolution metric. | number | 60 |
@@ -195,6 +196,7 @@ Name : **{{environment}}**-ecs-service-**{{ecs_group_node}}**-role
 | ecs\_num\_images\_delete\_per\_cycle | The maximum number of images to delete in a single automated image cleanup cycle. If set to less than 1, the value is ignored. | number | 5 |
 | ecs\_optimized\_amis | The map of region to ecs optimized AMI. By default the latest available will be chosen. | map | {} |
 | ecs\_selinux\_capable | Whether SELinux is available on the container instance. | bool | false |
+| ecs\_updates\_enabled | Whether to exit for Amazon ECS agent updates when they are requested. | bool | false |
 | efs\_mount\_point | The EFS volume mount point for EC2 instances. | string | "/mnt/efs" |
 | efs\_volume | The EFS volume to attach to ec2 instances. ( ex : fs-05a856xx) | string | "" |
 | enable\_monitoring | If true, the launched EC2 instance cluster node will have detailed monitoring enabled. | bool | true |
