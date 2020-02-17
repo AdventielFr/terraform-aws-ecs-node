@@ -73,7 +73,7 @@ resource "aws_cloudwatch_event_target" "check_every_x_minutes" {
 }
 
 data "aws_iam_policy_document" "auto_update_ecs_cluster_agent" {
-  count = var.auto_update_ecs_agent && lenght(aws_sns_topic.auto_update_ecs_cluster_agent)>0 ? 1 : 0
+  count = var.auto_update_ecs_agent && length(aws_sns_topic.auto_update_ecs_cluster_agent)>0 ? 1 : 0
   statement {
     sid       = "AllowSNSPermissions"
     effect    = "Allow"
