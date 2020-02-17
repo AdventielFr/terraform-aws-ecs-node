@@ -1,10 +1,10 @@
 --==BOUNDARY==
 Content-Type: text/x-shellscript; charset="us-ascii"
 #!/usr/bin/env bash
-yum install -y python-pip
+yum install -y python3 python-pip
 pip install --upgrade pip
-pip install goto-statement
-pip install pygtail
+pip3 install goto-statement
+pip3 install pygtail
 
 --==BOUNDARY==
 Content-Type: text/x-shellscript; charset="us-ascii"
@@ -12,7 +12,7 @@ Content-Type: text/x-shellscript; charset="us-ascii"
 mkdir -f /var/log/ecs
 # Write the file to /usr/bin
 cat > /usr/bin/auto-restart-ecs.py <<- EOF
-#!/usr/bin/env python
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 import re
 import os.path
@@ -77,7 +77,7 @@ Conflicts=getty@tty1.service
 
 [Service]
 Type=simple
-ExecStart=/usr/bin/python /usr/bin/auto-restart-ecs.py
+ExecStart=/usr/bin/python3 /usr/bin/auto-restart-ecs.py
 StandardInput=tty-force
 
 [Install]
