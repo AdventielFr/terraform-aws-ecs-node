@@ -8,5 +8,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - add ebs option : now it's possible de attach a ebs volume
-- add auto update ecs agent by lambda execution for the cluter container group node
 - add auto restart esc agent if CannotPullError on ECR

@@ -431,13 +431,6 @@ variable "function_timeout" {
 
 variable "auto_restart_ecs_agent" {
   type        = bool
-  default     = true
+  default     = false
   description = "Auto restart ECS cluster Agent if the container instance loose sts crendentials for pull image from ECR."
 }
-
-variable "ecs_updates_enabled" {
-  type        = bool
-  default     = false
-  description = "Whether to exit for Amazon ECS agent updates when they are requested."
-}
-
