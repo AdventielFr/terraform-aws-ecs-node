@@ -85,6 +85,7 @@ variable "user_data" {
 variable "instance_security_groups" {
   description = "The List of security group for ecs cluster node."
   type        = list(string)
+  default     = []
 }
 
 variable "ecs_cloudwath_retention_in_days" {
@@ -411,26 +412,15 @@ variable "cloudwatch_event_autoscaling_sns_arn" {
   default     = ""
 }
 
-variable "auto_update_ecs_agent" {
-  type        = bool
-  default     = true
-  description = "Auto update ECS cluster Agent for ECS group node in Cluster"
-}
-
-variable "scan_alarm_clock" {
-  description = "The time between two scan to search for update ecs agent"
-  type        = number
-  default     = 1440
-}
-
-variable "function_timeout" {
-  description = "The amount of time your Lambda Functions has to run in seconds."
-  default     = 300
-  type        = number
-}
-
 variable "auto_restart_ecs_agent" {
   type        = bool
   default     = false
   description = "Auto restart ECS cluster Agent if the container instance loose sts crendentials for pull image from ECR."
 }
+
+variable "associate_public_ip_address" {
+  type = bool
+  default = false
+  description = "Associate a public ip address with the network interface. Boolean value."
+}
+

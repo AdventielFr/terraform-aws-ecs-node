@@ -62,14 +62,14 @@ resource "aws_cloudwatch_log_group" "ecs_var_log_ecs_audit_log" {
 ## Autoscaling cloudwatch event 
 
 resource "aws_cloudwatch_event_rule" "this" {
-  count         = local.enabled_cloudwatch_event_autoscaling != "" ? 1 : 0
+  count         = local.enabled_cloudwatch_event_autoscaling ? 1 : 0
   name          = "${var.ecs_cluster_name}-${var.ecs_group_node}-autoscaling"
   description   = "Captures events from ECS cluster autoscaling ${var.ecs_cluster_name} and node group ${var.ecs_group_node}"
   event_pattern = data.template_file.cloudwatch_event_rules_autoscaling.rendered
 }
 
 resource "aws_cloudwatch_event_target" "this" {
-  count     = local.enabled_cloudwatch_event_autoscaling != "" ? 1 : 0
+  count     = local.enabled_cloudwatch_event_autoscaling ? 1 : 0
   rule      = element(aws_cloudwatch_event_rule.this.*.name, 0)
   target_id = "SendToSNS"
   arn       = var.cloudwatch_event_autoscaling_sns_arn

@@ -9,3 +9,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - add ebs option : now it's possible de attach a ebs volume
 - add auto restart esc agent if CannotPullError on ECR
+- chore: refactoring terraform
