@@ -51,10 +51,6 @@ resource "aws_launch_template" "with_ebs" {
   }
   ebs_optimized = var.ebs_optimized
 
-  network_interfaces {
-    associate_public_ip_address = var.associate_public_ip_address
-  }
-
 }
 
 #----------------------
@@ -97,10 +93,6 @@ resource "aws_launch_template" "without_ebs" {
     enabled = var.enable_monitoring
   }
   ebs_optimized = var.ebs_optimized
-
-  network_interfaces {
-    associate_public_ip_address = var.associate_public_ip_address
-  }
 }
 
 #----------------------

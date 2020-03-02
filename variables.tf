@@ -412,9 +412,8 @@ variable "auto_restart_ecs_agent" {
   description = "Auto restart ECS cluster Agent if the container instance loose sts crendentials for pull image from ECR."
 }
 
-variable "associate_public_ip_address" {
-  type = bool
-  default = false
-  description = "Associate a public ip address with the network interface. Boolean value."
+variable "cloudwatch_event_autoscaling_sns_arn" {
+  description = "The ARN of the SNS topic that receives modification events from the autoscaling group."
+  type        = string
+  default     = ""
 }
-
