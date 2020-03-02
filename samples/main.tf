@@ -139,10 +139,8 @@ module "ecs_cluster" {
   ecs_enable_task_iam_role_network_host = true
   ecs_agent_loglevel                    = "info"
 
-  associate_public_ip_address = true
-
-  #instance_security_groups = [
-  #  aws_security_group.allow_all_from_internet.id
-  #]
+  instance_security_groups = [
+    aws_security_group.allow_all_from_internet.id
+  ]
 
 } 

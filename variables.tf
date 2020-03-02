@@ -411,9 +411,3 @@ variable "auto_restart_ecs_agent" {
   default     = false
   description = "Auto restart ECS cluster Agent if the container instance loose sts crendentials for pull image from ECR."
 }
-
-variable "cloudwatch_event_autoscaling_sns_arn" {
-  description = "The ARN of the SNS topic that receives modification events from the autoscaling group."
-  type        = string
-  default     = ""
-}
