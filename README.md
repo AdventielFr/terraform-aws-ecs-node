@@ -164,7 +164,6 @@ Name : **{{environment}}**-ecs-service-**{{ecs_group_node}}**-role
 | asg\_health\_period | Time (in seconds) after instance comes into service before checking health. | `number` | `180` | no |
 | asg\_max | The maximum numbers of instances in the auto scaling group. | `number` | `1` | no |
 | asg\_min | The minimum numbers of instances in the auto scaling group. | `number` | `1` | no |
-| associate\_public\_ip\_address | Associate a public ip address with the network interface. Boolean value. | `bool` | `false` | no |
 | auto\_restart\_ecs\_agent | Auto restart ECS cluster Agent if the container instance loose sts crendentials for pull image from ECR. | `bool` | `false` | no |
 | aws\_region | The AWS region to deploy | `string` | n/a | yes |
 | cloudwatch\_agent\_metrics\_collection\_interval | Specifies how often to collect the cpu metrics, overriding the global metrics\_collection\_interval specified in the agent section of the configuration file. If you set this value below 60 seconds, each metric is collected as a high-resolution metric. | `number` | `60` | no |
@@ -172,6 +171,7 @@ Name : **{{environment}}**-ecs-service-**{{ecs_group_node}}**-role
 | cloudwatch\_agent\_metrics\_cpu\_resources | Specifies that per-cpu metrics are to be collected. The only allowed value is *. If you include this field and value, per-cpu metrics are collected. | `string` | `"\"resources\": [\"*\"],"` | no |
 | cloudwatch\_agent\_metrics\_custom\_config\_content | The content of cloudwatch agent config if cloudwatch\_agent\_metrics\_config = custom | `string` | `""` | no |
 | cloudwatch\_agent\_metrics\_disk\_resources | Specifies an array of disk mount points. This field limits CloudWatch to collect metrics from only the listed mount points. You can specify * as the value to collect metrics from all mount points. Defaults to the root / mountpount. | `list(string)` | <pre>[<br>  "/"<br>]</pre> | no |
+| cloudwatch\_event\_autoscaling\_sns\_arn | The ARN of the SNS topic that receives modification events from the autoscaling group. | `string` | `""` | no |
 | cron\_definition\_restart\_ecs\_demon | The cron définition for restart ecs daemon for sts management(default every 6 hours) | `string` | `"0 */6 * * *"` | no |
 | ebs\_delete\_on\_termination | Whether the volume should be destroyed on instance termination (Default: false). See Preserving Amazon EBS Volumes on Instance Termination for more information. | `bool` | `false` | no |
 | ebs\_kms\_key\_id | AWS Key Management Service (AWS KMS) customer master key (CMK) to use when creating the encrypted volume. encrypted must be set to true when this is set. | `string` | `""` | no |
@@ -270,9 +270,6 @@ module "ecs_cluster_node" {
   alarm_cpu_scale_up_threshold = 80
   # scale down >10% CPU used on group instances
   alarm_cpu_scale_up_threshold = 10
-
-  # shared bucket informations
-  create_shared_bucket                  = true
 
   # ecs.config informations ( show https://docs.aws.amazon.com/AmazonECS/latest/developerguide/ecs-agent-config.html )
   ecs_image_pull_behavior               = "always"
