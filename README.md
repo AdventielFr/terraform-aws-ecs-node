@@ -125,7 +125,7 @@ This IAM role is applied to differences in the instance group
 
 Name : **{{environment}}**-ecs-node-**{{ecs_group_node}}**-role
 
-#### AWS IAM for ECS service 
+#### AWS IAM for ECS service
 
 This IAM role is applied to differences in the instance group
 
