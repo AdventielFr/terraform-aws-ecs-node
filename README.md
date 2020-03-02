@@ -172,7 +172,6 @@ Name : **{{environment}}**-ecs-service-**{{ecs_group_node}}**-role
 | cloudwatch\_agent\_metrics\_cpu\_resources | Specifies that per-cpu metrics are to be collected. The only allowed value is *. If you include this field and value, per-cpu metrics are collected. | `string` | `"\"resources\": [\"*\"],"` | no |
 | cloudwatch\_agent\_metrics\_custom\_config\_content | The content of cloudwatch agent config if cloudwatch\_agent\_metrics\_config = custom | `string` | `""` | no |
 | cloudwatch\_agent\_metrics\_disk\_resources | Specifies an array of disk mount points. This field limits CloudWatch to collect metrics from only the listed mount points. You can specify * as the value to collect metrics from all mount points. Defaults to the root / mountpount. | `list(string)` | <pre>[<br>  "/"<br>]</pre> | no |
-| cloudwatch\_event\_autoscaling\_sns\_arn | The ARN of the SNS topic that receives modification events from the autoscaling group. | `string` | `""` | no |
 | cron\_definition\_restart\_ecs\_demon | The cron définition for restart ecs daemon for sts management(default every 6 hours) | `string` | `"0 */6 * * *"` | no |
 | ebs\_delete\_on\_termination | Whether the volume should be destroyed on instance termination (Default: false). See Preserving Amazon EBS Volumes on Instance Termination for more information. | `bool` | `false` | no |
 | ebs\_kms\_key\_id | AWS Key Management Service (AWS KMS) customer master key (CMK) to use when creating the encrypted volume. encrypted must be set to true when this is set. | `string` | `""` | no |
