@@ -132,7 +132,6 @@ module "ecs_cluster" {
   # scale down >10% CPU used on group instances
   alarm_cpu_scale_down_threshold = 10
 
-
   # ecs.config informations ( show https://docs.aws.amazon.com/AmazonECS/latest/developerguide/ecs-agent-config.html )
   ecs_image_pull_behavior               = "always"
   ecs_enable_task_iam_role              = true
@@ -143,4 +142,4 @@ module "ecs_cluster" {
     aws_security_group.allow_all_from_internet.id
   ]
 
-} 
+}

@@ -38,8 +38,8 @@ ${ecs_no_proxy}
 # Inject the CloudWatch Logs configuration file contents
 cat > /etc/awslogs/awslogs.conf <<- EOF
 [general]
-state_file = /var/lib/awslogs/agent-state        
- 
+state_file = /var/lib/awslogs/agent-state
+
 [/var/log/dmesg]
 file = /var/log/dmesg
 log_group_name = /aws/ecs/${ecs_cluster_name}/node/${ecs_group_node}/var/log/dmesg
@@ -88,7 +88,7 @@ set -x
 
 until curl -s curl -s 169.254.169.254/latest/dynamic/instance-identity/document
 do
-	sleep 1	
+	sleep 1
 done
 
 # Set the region to send CloudWatch Logs data to (the region where the container instance is located)
@@ -148,4 +148,3 @@ systemctl start amazon-ssm-agent
 
 ${user_data_option_efs}
 ${user_data_option_cloudwatch_agent}
-${user_data_option_auto_restart_ecs_agent}

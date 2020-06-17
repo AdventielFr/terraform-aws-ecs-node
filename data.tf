@@ -71,14 +71,7 @@ data "template_file" "user_data_cloudwath_agent_option_tpl" {
 }
 
 #----------------------
-# Data template for AWS ECS Agent Auto retart configuration
-#----------------------
-data "template_file" "user_data_auto_restart_ecs_agent_option_tpl" {
-  template = "${file("${path.module}/templates/user-data-opt-auto-restart-ecs-agent.tpl")}"
-}
-
-#----------------------
-# Data template for AWS Cloudwatch Agent for minimal configuration 
+# Data template for AWS Cloudwatch Agent for minimal configuration
 #----------------------
 data "template_file" "cloudwatch_agent_configuration_minimal_tpl" {
   template = "${file("${path.module}/templates/cloudwatch_agent_configuration_minimal.tpl")}"
@@ -92,7 +85,7 @@ data "template_file" "cloudwatch_agent_configuration_minimal_tpl" {
 }
 
 #----------------------
-# Data template for AWS Cloudwatch Agent for standard configuration 
+# Data template for AWS Cloudwatch Agent for standard configuration
 #----------------------
 data "template_file" "cloudwatch_agent_configuration_standard_tpl" {
   template = "${file("${path.module}/templates/cloudwatch_agent_configuration_standard.tpl")}"
@@ -106,7 +99,7 @@ data "template_file" "cloudwatch_agent_configuration_standard_tpl" {
 }
 
 #----------------------
-# Data template for AWS Cloudwatch Agent for advanced configuration 
+# Data template for AWS Cloudwatch Agent for advanced configuration
 #----------------------
 data "template_file" "cloudwatch_agent_configuration_advanced_tpl" {
   template = "${file("${path.module}/templates/cloudwatch_agent_configuration_advanced.tpl")}"
@@ -162,11 +155,9 @@ data "template_file" "user_data_tpl" {
     ecs_cni_plugins_path                    = var.ecs_cni_plugins_path
     ecs_disable_docker_health_check         = var.ecs_disable_docker_health_check
     ecs_checkpoint                          = var.ebs_volume_size > 0
-    cron_definition_restart_ecs_demon       = var.cron_definition_restart_ecs_demon
     user_data_option_efs                    = local.user_data_option_efs
     user_data_option_cloudwatch_agent       = local.user_data_option_cloudwatch_agent
     user_data_option_ebs                    = local.user_data_option_ebs
-    user_data_option_auto_restart_ecs_agent = local.user_data_option_auto_restart_ecs_agent
   }
 }
 
@@ -193,7 +184,6 @@ locals {
   ecs_no_proxy                            = var.ecs_no_proxy != "" ? "echo NO_PROXY=${var.ecs_no_proxy} >> /etc/ecs/ecs.config" : ""
   cloudwatch_agent_config_content         = var.cloudwatch_agent_metrics_config == "minimal" ? data.template_file.cloudwatch_agent_configuration_minimal_tpl.rendered : (var.cloudwatch_agent_metrics_config == "custom" ? var.cloudwatch_agent_metrics_custom_config_content : (var.cloudwatch_agent_metrics_config == "standard" ? data.template_file.cloudwatch_agent_configuration_standard_tpl.rendered : (var.cloudwatch_agent_metrics_config == "advanced" ? data.template_file.cloudwatch_agent_configuration_advanced_tpl.rendered : "")))
   ebs_no_device                           = var.ebs_volume_size <= 0
-  user_data_option_auto_restart_ecs_agent = var.auto_restart_ecs_agent ? data.template_file.user_data_auto_restart_ecs_agent_option_tpl.rendered : ""
   user_data_option_ebs                    = local.ebs_no_device ? "" : data.template_file.user_data_ebs_option_tpl.rendered
   user_data_option_efs                    = var.efs_volume == "" ? "" : data.template_file.user_data_efs_option_tpl.rendered
   user_data_option_cloudwatch_agent       = local.cloudwatch_agent_config_content == "" ? "" : data.template_file.user_data_cloudwath_agent_option_tpl.rendered

@@ -364,12 +364,6 @@ variable "ebs_optimized" {
   default     = false
 }
 
-variable "cron_definition_restart_ecs_demon" {
-  description = "The cron définition for restart ecs daemon for sts management(default every 6 hours)"
-  type        = string
-  default     = "0 */6 * * *"
-}
-
 variable "enable_monitoring" {
   description = "If true, the launched EC2 instance cluster node will have detailed monitoring enabled."
   type        = bool
@@ -404,10 +398,4 @@ variable "cloudwatch_agent_metrics_custom_config_content" {
   description = "The content of cloudwatch agent config if cloudwatch_agent_metrics_config = custom"
   type        = string
   default     = ""
-}
-
-variable "auto_restart_ecs_agent" {
-  type        = bool
-  default     = false
-  description = "Auto restart ECS cluster Agent if the container instance loose sts crendentials for pull image from ECR."
 }

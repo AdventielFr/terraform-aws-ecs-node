@@ -29,6 +29,11 @@ resource "aws_iam_role_policy_attachment" "ecs_node_role_attachment_3" {
   policy_arn = "arn:aws:iam::aws:policy/CloudWatchAgentServerPolicy"
 }
 
+resource "aws_iam_role_policy_attachment" "ecs_node_role_attachment_4" {
+  role       = aws_iam_role.node_role.name
+  policy_arn = "arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryReadOnly"
+}
+
 resource "aws_iam_role_policy" "ecs_instance" {
   name   = "${var.environment}-ecs-node-${local.ecs_group_node}-policy"
   role   = aws_iam_role.node_role.name
