@@ -10,7 +10,7 @@ yum install -y awslogs jq
 # Setting info for ECS cluster configuration
 echo ECS_CLUSTER="${ecs_cluster_name}" >> /etc/ecs/ecs.config
 echo ECS_AVAILABLE_LOGGING_DRIVERS=[\"json-file\",\"syslog\",\"awslogs\"] >> /etc/ecs/ecs.config
-echo ECS_DATADIR=${ecs_datadir} >> /etc/ecs/ecs.config 
+echo ECS_DATADIR=${ecs_datadir} >> /etc/ecs/ecs.config
 echo AWS_DEFAULT_REGION=${aws_region} >> /etc/ecs/ecs.config
 echo ECS_LOGLEVEL=${ecs_agent_loglevel} >> /etc/ecs/ecs.config
 echo ECS_INSTANCE_ATTRIBUTES="{\"Environment\":\"${environment}\",\"EcsGroupNode\":\"${ecs_group_node}\"}" >> /etc/ecs/ecs.config

@@ -3,7 +3,7 @@
     <tr>
       <td style="text-align: center; vertical-align: middle;"><img src="_docs/logo_aws.jpg"/></td>
       <td style="text-align: center; vertical-align: middle;"><img src="_docs/logo_adv.jpg"/></td>
-    </tr> 
+    </tr>
   <table>
 </p>
 
@@ -14,7 +14,7 @@ The purpose of this module is to create an EC2 instances set that will make up t
 ## Infrastructure components
 
 ### AWS Auto scaling group
-  
+
 This terraform script created **One AWS Auto scaling group** used to ensure high availability of the instance group in the cluster
 
 Name : **{{environment}}**-ecs-node-**{{ecs_group_node}}**-asg
@@ -26,7 +26,7 @@ Tags :
 * Environment : **{{environment}}**
 
 * Name : **{{environment}}**-ecs-node-**{{ecs_group_node}}**
-  
+
 ### AWS EC2 Launch configuration
 
 This terraform script created **One AWS Launch configuration** used to deploy an instance of the instance group in the cluster.
@@ -52,7 +52,7 @@ This terraform script created **Many AWS EC2 intances** for the instance group i
 This terraform script created **Many AWS CloudWatch LogGroup** can be used to monitor the instance group in the cluster
 
 #### dmesg
-  
+
 Name : /aws/ecs/**{{ecs_cluster_name}}**/node/**{{ecs_group_node}}**/var/log/dmesg
 
 Recover the contents of the **/var/log/dmesg** file of instances of the cluster instance group
@@ -81,7 +81,7 @@ Name : aws/ecs/**{{ecs_cluster_name}}**/node/**{{ecs_group_node}}**/var/log/mess
 
 Recover the contents of the **/var/log/messages** file of instances of the cluster instance group
 
-### AWS CloudWatch Alarm 
+### AWS CloudWatch Alarm
 
 This terraform script created **Many AWS CloudWatch Alarm** for the instance group in the cluster.
 
@@ -174,6 +174,7 @@ No requirements.
 | cloudwatch\_agent\_metrics\_cpu\_resources | Specifies that per-cpu metrics are to be collected. The only allowed value is \*. If you include this field and value, per-cpu metrics are collected. | `string` | `"\"resources\": [\"*\"],"` | no |
 | cloudwatch\_agent\_metrics\_custom\_config\_content | The content of cloudwatch agent config if cloudwatch\_agent\_metrics\_config = custom | `string` | `""` | no |
 | cloudwatch\_agent\_metrics\_disk\_resources | Specifies an array of disk mount points. This field limits CloudWatch to collect metrics from only the listed mount points. You can specify \* as the value to collect metrics from all mount points. Defaults to the root / mountpount. | `list(string)` | <pre>[<br>  "/"<br>]</pre> | no |
+| cloudwatch\_event\_autoscaling\_sns\_arn | The ARN of the SNS topic that receives modification events from the autoscaling group. | `string` | `""` | no |
 | ebs\_delete\_on\_termination | Whether the volume should be destroyed on instance termination (Default: false). See Preserving Amazon EBS Volumes on Instance Termination for more information. | `bool` | `false` | no |
 | ebs\_kms\_key\_id | AWS Key Management Service (AWS KMS) customer master key (CMK) to use when creating the encrypted volume. encrypted must be set to true when this is set. | `string` | `""` | no |
 | ebs\_optimized | If true, the launched EC2 instance will be EBS-optimized. | `bool` | `false` | no |
