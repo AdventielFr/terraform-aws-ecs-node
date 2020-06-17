@@ -133,6 +133,10 @@ Name : **{{environment}}**-ecs-service-**{{ecs_group_node}}**-role
 
 ## Inputs / Outputs
 
+### Requirements
+
+No requirements.
+
 ### Providers
 
 | Name | Version |
@@ -143,7 +147,7 @@ Name : **{{environment}}**-ecs-service-**{{ecs_group_node}}**-role
 ### Inputs
 
 | Name | Description | Type | Default | Required |
-|------|-------------|------|---------|:-----:|
+|------|-------------|------|---------|:--------:|
 | alarm\_cpu\_scale\_down\_evaluation\_periods | The number of periods over which data is compared to the specified threshold for Alarm CPU scale down | `number` | `2` | no |
 | alarm\_cpu\_scale\_down\_period | The CPU period of the instance group that triggers an increase in the number of instances in the instance group | `number` | `180` | no |
 | alarm\_cpu\_scale\_down\_threshold | The CPU consumption threshold of the instance group that triggers the reduction of the number of instances in the instance group | `number` | `10` | no |
@@ -164,14 +168,12 @@ Name : **{{environment}}**-ecs-service-**{{ecs_group_node}}**-role
 | asg\_health\_period | Time (in seconds) after instance comes into service before checking health. | `number` | `180` | no |
 | asg\_max | The maximum numbers of instances in the auto scaling group. | `number` | `1` | no |
 | asg\_min | The minimum numbers of instances in the auto scaling group. | `number` | `1` | no |
-| auto\_restart\_ecs\_agent | Auto restart ECS cluster Agent if the container instance loose sts crendentials for pull image from ECR. | `bool` | `false` | no |
 | aws\_region | The AWS region to deploy | `string` | n/a | yes |
 | cloudwatch\_agent\_metrics\_collection\_interval | Specifies how often to collect the cpu metrics, overriding the global metrics\_collection\_interval specified in the agent section of the configuration file. If you set this value below 60 seconds, each metric is collected as a high-resolution metric. | `number` | `60` | no |
 | cloudwatch\_agent\_metrics\_config | Which metrics should we send to cloudwatch, the default is empty. If the value is empty then  clouwatch agent is not installed .Setting this variable to advanced will send all the available metrics that are provided by the agent. You can find more information here https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/create-cloudwatch-agent-configuration-file-wizard.html. The valids values are  : <empty> / minimal /standard / advanced or custom. | `string` | `""` | no |
-| cloudwatch\_agent\_metrics\_cpu\_resources | Specifies that per-cpu metrics are to be collected. The only allowed value is *. If you include this field and value, per-cpu metrics are collected. | `string` | `"\"resources\": [\"*\"],"` | no |
+| cloudwatch\_agent\_metrics\_cpu\_resources | Specifies that per-cpu metrics are to be collected. The only allowed value is \*. If you include this field and value, per-cpu metrics are collected. | `string` | `"\"resources\": [\"*\"],"` | no |
 | cloudwatch\_agent\_metrics\_custom\_config\_content | The content of cloudwatch agent config if cloudwatch\_agent\_metrics\_config = custom | `string` | `""` | no |
-| cloudwatch\_agent\_metrics\_disk\_resources | Specifies an array of disk mount points. This field limits CloudWatch to collect metrics from only the listed mount points. You can specify * as the value to collect metrics from all mount points. Defaults to the root / mountpount. | `list(string)` | <pre>[<br>  "/"<br>]</pre> | no |
-| cron\_definition\_restart\_ecs\_demon | The cron définition for restart ecs daemon for sts management(default every 6 hours) | `string` | `"0 */6 * * *"` | no |
+| cloudwatch\_agent\_metrics\_disk\_resources | Specifies an array of disk mount points. This field limits CloudWatch to collect metrics from only the listed mount points. You can specify \* as the value to collect metrics from all mount points. Defaults to the root / mountpount. | `list(string)` | <pre>[<br>  "/"<br>]</pre> | no |
 | ebs\_delete\_on\_termination | Whether the volume should be destroyed on instance termination (Default: false). See Preserving Amazon EBS Volumes on Instance Termination for more information. | `bool` | `false` | no |
 | ebs\_kms\_key\_id | AWS Key Management Service (AWS KMS) customer master key (CMK) to use when creating the encrypted volume. encrypted must be set to true when this is set. | `string` | `""` | no |
 | ebs\_optimized | If true, the launched EC2 instance will be EBS-optimized. | `bool` | `false` | no |
@@ -229,7 +231,7 @@ Name : **{{environment}}**-ecs-service-**{{ecs_group_node}}**-role
 
 ## Usage
 
-`````
+```shell
 
 resource "aws_ecs_cluster" "ecs_cluster" {
   name = "my-cluster"
@@ -258,7 +260,7 @@ module "ecs_cluster_node" {
       "subnet-0a632ea35bfa2xxxx",
       "subnet-0c6f42baa5077xxxx"
   ]
-  
+
   # auto scaling informations
   asg_min       = 2
   asg_max       = 3
@@ -286,4 +288,4 @@ module "ecs_cluster_node" {
   ]
 }
 
-`````
+```
