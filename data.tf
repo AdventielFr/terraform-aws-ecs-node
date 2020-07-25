@@ -111,16 +111,6 @@ data "template_file" "cloudwatch_agent_configuration_advanced_tpl" {
   }
 }
 
-
-data "template_file" "cloudwatch_event_rules_autoscaling" {
-  template = "${file("${path.module}/templates/cloudwatch_event_rules_autoscaling.tpl")}"
-
-  vars = {
-    name_autoscaling_group = aws_autoscaling_group.this.name
-  }
-
-}
-
 #----------------------
 # Data template for User Data EC2 connfiguration
 #----------------------
