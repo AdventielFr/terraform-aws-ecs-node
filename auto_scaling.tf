@@ -12,6 +12,12 @@ resource "aws_autoscaling_group" "this" {
     id      = local.ebs_no_device ? aws_launch_template.without_ebs[0].id : aws_launch_template.with_ebs[0].id
     version = "$Latest"
   }
+  lifecycle {
+    ignore_changes = [
+      desired_capacity
+    ]
+  }
+  
 }
 
 #----------------------
